@@ -1,0 +1,65 @@
+# azure-pipelines.yml
+trigger:
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  nodeVersion: '18.x'
+  azureSubscription: 'seu-subscription-id'
+  appServiceName: 'seu-app-service-name'
+
+stages:
+  - stage: Build
+    jobs:
+      - job: BuildAndTest
+        displayName: 'Build e Testes'
+        steps:
+          - task: UseNode@1
+            inputs:
+              version: $(nodeVersion)
+            displayName: 'Setup Node.js'
+
+          - script: |
+              npm ci
+            displayName: 'Instalar dependências'
+
+          - script: |
+              npm run db:migrate
+            displayName: 'Migrar banco de dados'
+            continueOnError: true
+
+  - stage: Deploy
+    condition: succeeded()
+    jobs:
+      - deployment: DeployToAzure
+        displayName: 'Deploy para Azure App Service'
+        environment: production
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: DownloadBuildArtifacts@0
+                  inputs:
+                    buildType: 'current'
+                    downloadType: 'all'
+
+                - task: AzureRmWebAppDeployment@4
+                  inputs:
+                    azureSubscription: $(azureSubscription)
+                    appType: 'webAppLinux'
+                    WebAppName: $(appServiceName)
+                    packageForLinux: '$(System.DefaultWorkingDirectory)'
+                    RuntimeStack: 'NODE|18'
+                    StartupCommand: 'npm start'
+                    AppSettings: |
+                      -DATABASE_HOST $(DATABASE_HOST)
+                      -DATABASE_PORT $(DATABASE_PORT)
+                      -DATABASE_NAME $(DATABASE_NAME)
+                      -DATABASE_USER $(DATABASE_USER)
+                      -DATABASE_PASSWORD $(DATABASE_PASSWORD)
+                      -JWT_SECRET $(JWT_SECRET)
+                      -NODE_ENV production
+                      -CORS_ORIGIN $(CORS_ORIGIN)
+                  displayName: 'Deploy App Service'

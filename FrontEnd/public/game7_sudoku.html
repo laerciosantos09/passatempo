@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku - Passatempo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 28px;
+        }
+
+        .back-btn {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .stat-box {
+            background: #f5f5f5;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .sudoku-board {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            gap: 0;
+            margin-bottom: 20px;
+            border: 3px solid #333;
+            width: 100%;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .sudoku-cell {
+            aspect-ratio: 1;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            background: white;
+        }
+
+        .sudoku-cell:nth-child(3n) {
+            border-right: 2px solid #333;
+        }
+
+        .sudoku-cell:nth-child(27n) {
+            border-bottom: 2px solid #333;
+        }
+
+        .sudoku-cell.original {
+            background: #e8e8e8;
+            color: #333;
+        }
+
+        .sudoku-cell.user-input {
+            color: #667eea;
+        }
+
+        .sudoku-cell.selected {
+            background: #667eea;
+            color: white;
+        }
+
+        .sudoku-cell.error {
+            background: #ffcdd2;
+        }
+
+        .number-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .number-btn {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .number-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .message {
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .message.success {
+            background: #e8f5e9;
+            color: #388e3c;
+            border: 2px solid #388e3c;
+            display: block;
+        }
+
+        .message.error {
+            background: #ffebee;
+            color: #c62828;
+            border: 2px solid #c62828;
+            display: block;
+        }
+
+        @media (max-width: 600px) {
+            .sudoku-board {
+                max-width: 100%;
+            }
+
+            .sudoku-cell {
+                font-size: 14px;
+            }
+
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔢 Sudoku</h1>
+            <a href="/index.html" class="back-btn">← Voltar</a>
+        </div>
+
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-label">Nível</div>
+                <div class="stat-value"><span id="nivelAtual">1</span>/200</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Tempo</div>
+                <div class="stat-value"><span id="tempo">00:00</span></div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Dificuldade</div>
+                <div class="stat-value"><span id="dificuldade">Fácil</span></div>
+            </div>
+        </div>
+
+        <div class="message" id="message"></div>
+
+        <div class="sudoku-board" id="sudokuBoard"></div>
+
+        <div class="number-pad" id="numberPad"></div>
+
+        <div class="controls">
+            <button class="btn" onclick="verificarSolucao()">✓ Verificar</button>
+            <button class="btn" onclick="novoJogo()">🔄 Novo</button>
+            <button class="btn" onclick="proximoNivel()">→ Próximo</button>
+        </div>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script>
+        const SUDOKU_NIVEIS = 200;
+        let gameState = {
+            nivel: 1,
+            dificuldade: 'facil',
+            tabuleiro: [],
+            tabuleirOriginal: [],
+            inicioTempo: null,
+            tempoDecorrido: 0,
+            celulaSelecionada: null,
+            jogoTerminado: false
+        };
+
+        let timerInterval;
+
+        function inicializarJogo() {
+            gameState.nivel = parseInt(localStorage.getItem('sudokuNivel') || 1);
+            if (gameState.nivel > SUDOKU_NIVEIS) gameState.nivel = 1;
+
+            definirDificuldade();
+            gerarSudoku();
+            renderizarTabuleiro();
+            renderizarNumberPad();
+
+            gameState.inicioTempo = Date.now();
+            iniciarTimer();
+        }
+
+        function definirDificuldade() {
+            // Dificuldade aumenta a cada 50 níveis
+            if (gameState.nivel <= 67) {
+                gameState.dificuldade = 'facil';
+                document.getElementById('dificuldade').textContent = 'Fácil';
+            } else if (gameState.nivel <= 133) {
+                gameState.dificuldade = 'normal';
+                document.getElementById('dificuldade').textContent = 'Normal';
+            } else {
+                gameState.dificuldade = 'dificil';
+                document.getElementById('dificuldade').textContent = 'Difícil';
+            }
+        }
+
+        function gerarSudoku() {
+            // Sudoku simples (em produção, usar biblioteca ou pré-gerar)
+            gameState.tabuleirOriginal = criarTabuleiroVazio();
+            preencherTabuleiroSimples(gameState.tabuleirOriginal);
+            gameState.tabuleiro = JSON.parse(JSON.stringify(gameState.tabuleirOriginal));
+            removerNumerosParaDificuldade();
+        }
+
+        function criarTabuleiroVazio() {
+            return Array(9).fill(null).map(() => Array(9).fill(0));
+        }
+
+        function preencherTabuleiroSimples(tabuleiro) {
+            // Preencher diagonal com números aleatórios
+            for (let i = 0; i < 9; i++) {
+                for (let j = 0; j < 9; j++) {
+                    if (i === j) {
+                        tabuleiro[i][j] = ((i * 3 + j) % 9) + 1;
+                    }
+                }
+            }
+        }
+
+        function removerNumerosParaDificuldade() {
+            let numerosParaRemover;
+            if (gameState.dificuldade === 'facil') {
+                numerosParaRemover = 20;
+            } else if (gameState.dificuldade === 'normal') {
+                numerosParaRemover = 40;
+            } else {
+                numerosParaRemover = 50;
+            }
+
+            let removidos = 0;
+            while (removidos < numerosParaRemover) {
+                const linha = Math.floor(Math.random() * 9);
+                const coluna = Math.floor(Math.random() * 9);
+                if (gameState.tabuleiro[linha][coluna] !== 0) {
+                    gameState.tabuleiro[linha][coluna] = 0;
+                    removidos++;
+                }
+            }
+        }
+
+        function renderizarTabuleiro() {
+            const board = document.getElementById('sudokuBoard');
+            board.innerHTML = '';
+
+            for (let i = 0; i < 9; i++) {
+                for (let j = 0; j < 9; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'sudoku-cell';
+                    cell.textContent = gameState.tabuleiro[i][j] || '';
+
+                    if (gameState.tabuleirOriginal[i][j] !== 0) {
+                        cell.classList.add('original');
+                    } else {
+                        cell.classList.add('user-input');
+                        cell.addEventListener('click', () => selecionarCelula(i, j, cell));
+                    }
+
+                    board.appendChild(cell);
+                }
+            }
+
+            document.getElementById('nivelAtual').textContent = gameState.nivel;
+        }
+
+        function renderizarNumberPad() {
+            const pad = document.getElementById('numberPad');
+            pad.innerHTML = '';
+
+            for (let i = 1; i <= 9; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'number-btn';
+                btn.textContent = i;
+                btn.onclick = () => preencherCelula(i);
+                pad.appendChild(btn);
+            }
+
+            const btnLimpar = document.createElement('button');
+            btnLimpar.className = 'number-btn';
+            btnLimpar.textContent = 'Limpar';
+            btnLimpar.onclick = () => preencherCelula(0);
+            pad.appendChild(btnLimpar);
+        }
+
+        function selecionarCelula(linha, coluna, element) {
+            if (gameState.celulaSelecionada) {
+                gameState.celulaSelecionada.classList.remove('selected');
+            }
+            gameState.celulaSelecionada = element;
+            gameState.celulaSelecionada.classList.add('selected');
+            gameState.celulaSelecionada.dataset.linha = linha;
+            gameState.celulaSelecionada.dataset.coluna = coluna;
+        }
+
+        function preencherCelula(numero) {
+            if (!gameState.celulaSelecionada || gameState.jogoTerminado) return;
+
+            const linha = parseInt(gameState.celulaSelecionada.dataset.linha);
+            const coluna = parseInt(gameState.celulaSelecionada.dataset.coluna);
+
+            gameState.tabuleiro[linha][coluna] = numero;
+            gameState.celulaSelecionada.textContent = numero || '';
+
+            renderizarTabuleiro();
+        }
+
+        function verificarSolucao() {
+            let completo = true;
+            for (let i = 0; i < 9; i++) {
+                for (let j = 0; j < 9; j++) {
+                    if (gameState.tabuleiro[i][j] === 0) {
+                        completo = false;
+                        break;
+                    }
+                }
+            }
+
+            if (!completo) {
+                mostrarMensagem('Preencha todas as células!', 'error');
+                return;
+            }
+
+            mostrarMensagem('✓ Sudoku resolvido! Parabéns!', 'success');
+            gameState.jogoTerminado = true;
+            clearInterval(timerInterval);
+
+            salvarPontuacao();
+        }
+
+        async function salvarPontuacao() {
+            try {
+                const pontos = 100 - Math.floor(gameState.tempoDecorrido / 10);
+                await api.salvarPontuacao('Sudoku', Math.max(10, pontos), gameState.tempoDecorrido);
+            } catch (error) {
+                console.error('Erro ao salvar:', error);
+            }
+        }
+
+        function proximoNivel() {
+            if (gameState.nivel < SUDOKU_NIVEIS) {
+                gameState.nivel++;
+                localStorage.setItem('sudokuNivel', gameState.nivel);
+                novoJogo();
+            } else {
+                alert('🏆 Você completou todos os 200 níveis do Sudoku!');
+            }
+        }
+
+        function novoJogo() {
+            clearInterval(timerInterval);
+            gameState.jogoTerminado = false;
+            inicializarJogo();
+            document.getElementById('message').className = 'message';
+        }
+
+        function iniciarTimer() {
+            timerInterval = setInterval(() => {
+                gameState.tempoDecorrido = Math.floor((Date.now() - gameState.inicioTempo) / 1000);
+                const minutos = Math.floor(gameState.tempoDecorrido / 60);
+                const segundos = gameState.tempoDecorrido % 60;
+                document.getElementById('tempo').textContent = 
+                    `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function mostrarMensagem(texto, tipo) {
+            const msgEl = document.getElementById('message');
+            msgEl.textContent = texto;
+            msgEl.className = `message ${tipo}`;
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (!localStorage.getItem('token')) {
+                window.location.href = '/login.html';
+            } else {
+                inicializarJogo();
+            }
+        });
+    </script>
+</body>
+</html>

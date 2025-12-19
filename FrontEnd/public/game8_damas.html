@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Damas - Passatempo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 28px;
+        }
+
+        .back-btn {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .stat-box {
+            background: #f5f5f5;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .game-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 0;
+            border: 3px solid #333;
+            background: #333;
+        }
+
+        .square {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            background: white;
+            border: 1px solid #ddd;
+            position: relative;
+        }
+
+        .square.dark {
+            background: #333;
+        }
+
+        .square.highlight {
+            background: #fff9c4;
+        }
+
+        .square.valid-move {
+            background: #c8e6c9;
+        }
+
+        .piece {
+            width: 90%;
+            height: 90%;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            cursor: grab;
+        }
+
+        .piece.player {
+            background: #4CAF50;
+            border: 2px solid #2E7D32;
+        }
+
+        .piece.player.king::after {
+            content: '♔';
+            position: absolute;
+            font-size: 20px;
+        }
+
+        .piece.ai {
+            background: #f44336;
+            border: 2px solid #c62828;
+        }
+
+        .piece.ai.king::after {
+            content: '♔';
+            position: absolute;
+            font-size: 20px;
+        }
+
+        .message {
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .message.success {
+            background: #e8f5e9;
+            color: #388e3c;
+            border: 2px solid #388e3c;
+            display: block;
+        }
+
+        .message.error {
+            background: #ffebee;
+            color: #c62828;
+            border: 2px solid #c62828;
+            display: block;
+        }
+
+        .message.info {
+            background: #e3f2fd;
+            color: #1976d2;
+            border: 2px solid #1976d2;
+            display: block;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .info-text {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .board {
+                max-width: 100%;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>♟️ Damas</h1>
+            <a href="/index.html" class="back-btn">← Voltar</a>
+        </div>
+
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-label">Nível</div>
+                <div class="stat-value"><span id="nivelAtual">1</span>/200</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Você</div>
+                <div class="stat-value"><span id="playerPieces">12</span></div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">IA</div>
+                <div class="stat-value"><span id="aiPieces">12</span></div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Tempo</div>
+                <div class="stat-value"><span id="tempo">00:00</span></div>
+            </div>
+        </div>
+
+        <div class="message" id="message"></div>
+
+        <div class="info-text" id="infoText">Seu turno - Clique em uma peça verde e arraste para se mover</div>
+
+        <div class="game-area">
+            <div class="board" id="board"></div>
+        </div>
+
+        <div class="controls">
+            <button class="btn" onclick="desfazerMovimento()">↶ Desfazer</button>
+            <button class="btn" onclick="novoJogo()">🔄 Novo</button>
+            <button class="btn" onclick="proximoNivel()">→ Próximo</button>
+        </div>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script>
+        const DAMAS_NIVEIS = 200;
+        const BOARD_SIZE = 8;
+
+        let gameState = {
+            nivel: 1,
+            tabuleiro: [],
+            turnoJogador: true,
+            pecasSelecionada: null,
+            inicioTempo: null,
+            tempoDecorrido: 0,
+            jogoTerminado: false,
+            historico: []
+        };
+
+        let timerInterval;
+
+        function inicializarJogo() {
+            gameState.nivel = parseInt(localStorage.getItem('damasNivel') || 1);
+            if (gameState.nivel > DAMAS_NIVEIS) gameState.nivel = 1;
+
+            gameState.tabuleiro = criarTabuleiroInicial();
+            gameState.historico = [];
+            gameState.jogoTerminado = false;
+            gameState.turnoJogador = true;
+
+            renderizarTabuleiro();
+            gameState.inicioTempo = Date.now();
+            iniciarTimer();
+            mostrarMensagem('Seu turno!', 'info');
+        }
+
+        function criarTabuleiroInicial() {
+            const tabuleiro = Array(8).fill(null).map(() => Array(8).fill(null));
+
+            // Jogador (verde) - linhas 0-2
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 8; j++) {
+                    if ((i + j) % 2 === 1) {
+                        tabuleiro[i][j] = { tipo: 'player', rei: false };
+                    }
+                }
+            }
+
+            // IA (vermelho) - linhas 5-7
+            for (let i = 5; i < 8; i++) {
+                for (let j = 0; j < 8; j++) {
+                    if ((i + j) % 2 === 1) {
+                        tabuleiro[i][j] = { tipo: 'ai', rei: false };
+                    }
+                }
+            }
+
+            return tabuleiro;
+        }
+
+        function renderizarTabuleiro() {
+            const board = document.getElementById('board');
+            board.innerHTML = '';
+
+            for (let i = 0; i < BOARD_SIZE; i++) {
+                for (let j = 0; j < BOARD_SIZE; j++) {
+                    const square = document.createElement('div');
+                    square.className = 'square';
+
+                    if ((i + j) % 2 === 0) {
+                        square.classList.add('dark');
+                    }
+
+                    const peca = gameState.tabuleiro[i][j];
+                    if (peca) {
+                        const pecaEl = document.createElement('div');
+                        pecaEl.className = `piece ${peca.tipo}${peca.rei ? ' king' : ''}`;
+                        pecaEl.textContent = peca.tipo === 'player' ? '●' : '●';
+
+                        if (peca.tipo === 'player') {
+                            pecaEl.addEventListener('click', () => selecionarPeca(i, j));
+                        }
+
+                        square.appendChild(pecaEl);
+                    } else if (gameState.pecasSelecionada) {
+                        const movimentosValidos = obterMovimentosValidos(
+                            gameState.pecasSelecionada.i,
+                            gameState.pecasSelecionada.j
+                        );
+
+                        if (movimentosValidos.some(m => m.i === i && m.j === j)) {
+                            square.classList.add('valid-move');
+                            square.addEventListener('click', () => moverPeca(i, j));
+                        }
+                    }
+
+                    square.dataset.i = i;
+                    square.dataset.j = j;
+                    board.appendChild(square);
+                }
+            }
+
+            atualizarEstatisticas();
+        }
+
+        function selecionarPeca(i, j) {
+            if (gameState.tabuleiro[i][j]?.tipo === 'player') {
+                gameState.pecasSelecionada = { i, j };
+                renderizarTabuleiro();
+            }
+        }
+
+        function obterMovimentosValidos(i, j) {
+            const movimentos = [];
+            const peca = gameState.tabuleiro[i][j];
+
+            // Diagonais
+            const diagonais = [[-1, -1], [-1, 1], [1, -1], [1, 1]];
+
+            for (const [di, dj] of diagonais) {
+                const ni = i + di;
+                const nj = j + dj;
+
+                if (ni >= 0 && ni < 8 && nj >= 0 && nj < 8) {
+                    if (!gameState.tabuleiro[ni][nj]) {
+                        movimentos.push({ i: ni, j: nj, captura: false });
+                    } else if (gameState.tabuleiro[ni][nj]?.tipo !== peca.tipo) {
+                        // Verificar captura
+                        const nni = ni + di;
+                        const nnj = nj + dj;
+
+                        if (nni >= 0 && nni < 8 && nnj >= 0 && nnj < 8 && !gameState.tabuleiro[nni][nnj]) {
+                            movimentos.push({ i: nni, j: nnj, captura: true, capturaI: ni, capturaJ: nj });
+                        }
+                    }
+                }
+            }
+
+            return movimentos;
+        }
+
+        function moverPeca(novaI, novaJ) {
+            const { i, j } = gameState.pecasSelecionada;
+            const movimentos = obterMovimentosValidos(i, j);
+            const movimento = movimentos.find(m => m.i === novaI && m.j === novaJ);
+
+            if (!movimento) return;
+
+            // Salvar histórico
+            gameState.historico.push(JSON.parse(JSON.stringify(gameState.tabuleiro)));
+
+            // Realizar movimento
+            gameState.tabuleiro[novaI][novaJ] = gameState.tabuleiro[i][j];
+            gameState.tabuleiro[i][j] = null;
+
+            // Verificar captura
+            if (movimento.captura) {
+                gameState.tabuleiro[movimento.capturaI][movimento.capturaJ] = null;
+            }
+
+            // Verificar promoção a rei
+            if ((gameState.tabuleiro[novaI][novaJ].tipo === 'player' && novaI === 7) ||
+                (gameState.tabuleiro[novaI][novaJ].tipo === 'ai' && novaI === 0)) {
+                gameState.tabuleiro[novaI][novaJ].rei = true;
+            }
+
+            gameState.pecasSelecionada = null;
+            gameState.turnoJogador = false;
+
+            renderizarTabuleiro();
+            mostrarMensagem('Turno da IA...', 'info');
+
+            setTimeout(() => {
+                movimentoIA();
+            }, 1000);
+        }
+
+        function movimentoIA() {
+            // IA simples: move a primeira peça disponível
+            for (let i = 0; i < 8; i++) {
+                for (let j = 0; j < 8; j++) {
+                    const peca = gameState.tabuleiro[i][j];
+                    if (peca && peca.tipo === 'ai') {
+                        gameState.pecasSelecionada = { i, j };
+                        const movimentos = obterMovimentosValidos(i, j);
+
+                        if (movimentos.length > 0) {
+                            const movimento = movimentos[Math.floor(Math.random() * movimentos.length)];
+                            moverPecaIA(movimento.i, movimento.j);
+                            return;
+                        }
+                    }
+                }
+            }
+
+            // Se nenhum movimento, IA perdeu
+            finalizarJogo('player');
+        }
+
+        function moverPecaIA(novaI, novaJ) {
+            const { i, j } = gameState.pecasSelecionada;
+            const movimentos = obterMovimentosValidos(i, j);
+            const movimento = movimentos.find(m => m.i === novaI && m.j === novaJ);
+
+            if (movimento) {
+                gameState.tabuleiro[novaI][novaJ] = gameState.tabuleiro[i][j];
+                gameState.tabuleiro[i][j] = null;
+
+                if (movimento.captura) {
+                    gameState.tabuleiro[movimento.capturaI][movimento.capturaJ] = null;
+                }
+
+                if ((gameState.tabuleiro[novaI][novaJ].tipo === 'player' && novaI === 7) ||
+                    (gameState.tabuleiro[novaI][novaJ].tipo === 'ai' && novaI === 0)) {
+                    gameState.tabuleiro[novaI][novaJ].rei = true;
+                }
+            }
+
+            gameState.pecasSelecionada = null;
+            gameState.turnoJogador = true;
+
+            renderizarTabuleiro();
+            mostrarMensagem('Seu turno!', 'info');
+
+            verificarVitoria();
+        }
+
+        function verificarVitoria() {
+            let pecasJogador = 0;
+            let pecasIA = 0;
+
+            for (let i = 0; i < 8; i++) {
+                for (let j = 0; j < 8; j++) {
+                    if (gameState.tabuleiro[i][j]?.tipo === 'player') pecasJogador++;
+                    if (gameState.tabuleiro[i][j]?.tipo === 'ai') pecasIA++;
+                }
+            }
+
+            if (pecasIA === 0) {
+                finalizarJogo('player');
+            } else if (pecasJogador === 0) {
+                finalizarJogo('ai');
+            }
+        }
+
+        function finalizarJogo(vencedor) {
+            gameState.jogoTerminado = true;
+            clearInterval(timerInterval);
+
+            if (vencedor === 'player') {
+                mostrarMensagem('🎉 Você venceu!', 'success');
+                salvarPontuacao();
+            } else {
+                mostrarMensagem('A IA venceu. Tente novamente!', 'error');
+            }
+        }
+
+        function desfazerMovimento() {
+            if (gameState.historico.length > 0) {
+                gameState.tabuleiro = gameState.historico.pop();
+                gameState.turnoJogador = true;
+                gameState.pecasSelecionada = null;
+                renderizarTabuleiro();
+                mostrarMensagem('Movimento desfeito!', 'info');
+            }
+        }
+
+        function proximoNivel() {
+            if (gameState.nivel < DAMAS_NIVEIS) {
+                gameState.nivel++;
+                localStorage.setItem('damasNivel', gameState.nivel);
+                novoJogo();
+            } else {
+                alert('🏆 Você completou todos os 200 níveis de Damas!');
+            }
+        }
+
+        function novoJogo() {
+            clearInterval(timerInterval);
+            inicializarJogo();
+            document.getElementById('message').className = 'message';
+        }
+
+        function iniciarTimer() {
+            timerInterval = setInterval(() => {
+                gameState.tempoDecorrido = Math.floor((Date.now() - gameState.inicioTempo) / 1000);
+                const minutos = Math.floor(gameState.tempoDecorrido / 60);
+                const segundos = gameState.tempoDecorrido % 60;
+                document.getElementById('tempo').textContent = 
+                    `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function atualizarEstatisticas() {
+            let pecasJogador = 0;
+            let pecasIA = 0;
+
+            for (let i = 0; i < 8; i++) {
+                for (let j = 0; j < 8; j++) {
+                    if (gameState.tabuleiro[i][j]?.tipo === 'player') pecasJogador++;
+                    if (gameState.tabuleiro[i][j]?.tipo === 'ai') pecasIA++;
+                }
+            }
+
+            document.getElementById('nivelAtual').textContent = gameState.nivel;
+            document.getElementById('playerPieces').textContent = pecasJogador;
+            document.getElementById('aiPieces').textContent = pecasIA;
+        }
+
+        function mostrarMensagem(texto, tipo) {
+            const msgEl = document.getElementById('message');
+            msgEl.textContent = texto;
+            msgEl.className = `message ${tipo}`;
+        }
+
+        async function salvarPontuacao() {
+            try {
+                const pontos = 100 + (gameState.nivel * 2);
+                await api.salvarPontuacao('Damas', pontos, gameState.tempoDecorrido);
+            } catch (error) {
+                console.error('Erro ao salvar:', error);
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (!localStorage.getItem('token')) {
+                window.location.href = '/login.html';
+            } else {
+                inicializarJogo();
+            }
+        });
+    </script>
+</body>
+</html>

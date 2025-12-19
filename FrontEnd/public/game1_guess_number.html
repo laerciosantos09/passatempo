@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adivinha o Número - Passatempo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .back-btn {
+            display: block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            transition: opacity 0.3s;
+        }
+
+        .back-btn:hover {
+            opacity: 0.9;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .info {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #666;
+        }
+
+        .game-section {
+            margin: 20px 0;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input[type="number"] {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.3s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .message {
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-weight: 600;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .message.info {
+            background: #e3f2fd;
+            color: #1976d2;
+            border: 2px solid #1976d2;
+        }
+
+        .message.success {
+            background: #e8f5e9;
+            color: #388e3c;
+            border: 2px solid #388e3c;
+        }
+
+        .message.error {
+            background: #ffebee;
+            color: #c62828;
+            border: 2px solid #c62828;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-box {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-box h3 {
+            color: #667eea;
+            font-size: 24px;
+            margin: 5px 0;
+        }
+
+        .stat-box p {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .game-over {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background: #e8f5e9;
+            border-radius: 8px;
+            border: 2px solid #388e3c;
+        }
+
+        .game-over h2 {
+            color: #388e3c;
+            margin-bottom: 10px;
+        }
+
+        .game-over p {
+            color: #666;
+            margin: 10px 0;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .button-group button {
+            flex: 1;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 3px solid #ddd;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            .input-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-btn">← Voltar</a>
+
+        <h1>🎯 Adivinha o Número</h1>
+        <div class="info">
+            <p>Tente adivinhar o número secreto entre 1 e 100!</p>
+        </div>
+
+        <div class="game-section">
+            <div class="stats">
+                <div class="stat-box">
+                    <h3 id="tentativas">0</h3>
+                    <p>Tentativas</p>
+                </div>
+                <div class="stat-box">
+                    <h3 id="pontos">100</h3>
+                    <p>Pontos</p>
+                </div>
+            </div>
+
+            <div id="messagemContainer"></div>
+
+            <div class="input-group">
+                <input 
+                    type="number" 
+                    id="numeroInput" 
+                    min="1" 
+                    max="100" 
+                    placeholder="Digite um número"
+                    autocomplete="off"
+                >
+                <button onclick="chutar()">Chutar</button>
+            </div>
+
+            <div id="gameOverDiv" class="game-over">
+                <h2>🎉 Parabéns! Você acertou!</h2>
+                <p id="resultado"></p>
+                <div class="button-group">
+                    <button onclick="novoJogo()">Jogar Novamente</button>
+                    <button onclick="salvarPontuacao()">Salvar e Voltar</button>
+                </div>
+            </div>
+
+            <div id="loadingDiv" class="loading">
+                <div class="spinner"></div>
+                <p>Salvando sua pontuação...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script>
+
+    <script>
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let numeroSecreto;
+        let tentativas = 0;
+        let pontos = 100;
+        let jogoTerminado = false;
+
+        function iniciarJogo() {
+            numeroSecreto = Math.floor(Math.random() * 100) + 1;
+            tentativas = 0;
+            pontos = 100;
+            jogoTerminado = false;
+            
+            document.getElementById('tentativas').textContent = tentativas;
+            document.getElementById('pontos').textContent = pontos;
+            document.getElementById('numeroInput').value = '';
+            document.getElementById('numeroInput').disabled = false;
+            document.getElementById('messagemContainer').innerHTML = '';
+            document.getElementById('gameOverDiv').style.display = 'none';
+            document.getElementById('numeroInput').focus();
+        }
+
+        function chutar() {
+            if (jogoTerminado) return;
+
+            const numero = parseInt(document.getElementById('numeroInput').value);
+
+            if (!numero || numero < 1 || numero > 100) {
+                mostrarMensagem('Digite um número válido entre 1 e 100', 'error');
+                return;
+            }
+
+            tentativas++;
+            document.getElementById('tentativas').textContent = tentativas;
+
+            let mensagem = '';
+            let tipo = 'info';
+
+            if (numero === numeroSecreto) {
+                jogoTerminado = true;
+                pontos = Math.max(0, 100 - (tentativas - 1) * 5);
+                document.getElementById('pontos').textContent = pontos;
+                
+                document.getElementById('resultado').textContent = 
+                    `Você acertou em ${tentativas} tentativa${tentativas > 1 ? 's' : ''}!\nPontos: ${pontos}`;
+                
+                document.getElementById('gameOverDiv').style.display = 'block';
+                document.getElementById('numeroInput').disabled = true;
+                return;
+            } else if (numero < numeroSecreto) {
+                mensagem = `É maior que ${numero}! Tente novamente.`;
+                tipo = 'info';
+            } else {
+                mensagem = `É menor que ${numero}! Tente novamente.`;
+                tipo = 'info';
+            }
+
+            // Reduzir pontos a cada tentativa
+            pontos = Math.max(0, 100 - (tentativas * 5));
+            document.getElementById('pontos').textContent = pontos;
+
+            mostrarMensagem(mensagem, tipo);
+            document.getElementById('numeroInput').value = '';
+            document.getElementById('numeroInput').focus();
+        }
+
+        function mostrarMensagem(texto, tipo) {
+            const container = document.getElementById('messagemContainer');
+            container.innerHTML = `<div class="message ${tipo}">${texto}</div>`;
+        }
+
+        async function salvarPontuacao() {
+            const user = auth.currentUser;
+
+            if (!user) {
+                alert('Você precisa estar logado para salvar a pontuação!');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            document.getElementById('loadingDiv').style.display = 'block';
+
+            try {
+                // Obter nome do usuário
+                const userDoc = await db.collection('usuarios').doc(user.uid).get();
+                const nomeUsuario = userDoc.data().nome;
+
+                // Salvar pontuação
+                await db.collection('pontuacoes').add({
+                    uid: user.uid,
+                    nomeUsuario: nomeUsuario,
+                    nomeJogo: 'Adivinha o Número',
+                    pontos: pontos,
+                    tentativas: tentativas,
+                    data: new Date(),
+                    mes: new Date().getMonth() + 1,
+                    ano: new Date().getFullYear()
+                });
+
+                document.getElementById('loadingDiv').style.display = 'none';
+                alert('Pontuação salva com sucesso! ✨');
+                window.location.href = 'index.html';
+            } catch (error) {
+                document.getElementById('loadingDiv').style.display = 'none';
+                console.error('Erro ao salvar:', error);
+                alert('Erro ao salvar a pontuação. Tente novamente.');
+            }
+        }
+
+        function novoJogo() {
+            iniciarJogo();
+        }
+
+        // Permitir chutar com Enter
+        document.getElementById('numeroInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                chutar();
+            }
+        });
+
+        // Iniciar jogo ao carregar
+        iniciarJogo();
+    </script>
+</body>
+</html>
