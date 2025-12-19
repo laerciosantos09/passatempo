@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recomendações de Banco de Dados - Passatempo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        h2 {
+            color: #333;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-left: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        h3 {
+            color: #555;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #f9f9f9;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .comparison-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .comparison-table tr:hover {
+            background: #efefef;
+        }
+
+        .pros {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .cons {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .info-box {
+            background: #d1ecf1;
+            border-left: 4px solid #0c5460;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .code-block {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .recommendation {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .recommendation h3 {
+            color: white;
+            margin-top: 0;
+        }
+
+        .architecture-diagram {
+            background: #f9f9f9;
+            border: 2px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .comparison-table {
+                font-size: 12px;
+            }
+
+            .comparison-table th, .comparison-table td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Recomendações de Banco de Dados para o Passatempo</h1>
+
+        <div class="section">
+            <h2>📋 Visão Geral do Projeto</h2>
+            <p>O site Passatempo é uma plataforma de jogos com:</p>
+            <ul class="feature-list">
+                <li>6 jogos interativos (Adivinha Número, Quiz, Memória, Reação, Palavras Cruzadas, Ranking)</li>
+                <li>200 níveis por jogo</li>
+                <li>Sistema de pontuação e ranking global</li>
+                <li>Conquistas e badges</li>
+                <li>Perfis de usuários e estatísticas</li>
+                <li>Integração entre jogos</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>🗄️ Opções de Banco de Dados Recomendadas</h2>
+
+            <h3>1️⃣ Firebase Realtime Database + Firestore (RECOMENDADO PARA INICIANTES)</h3>
+            
+            <div class="recommendation">
+                <h3>✨ Por que escolher:</h3>
+                <p>Melhor opção para um site hospedado no Google Sites ou plataformas simples. Totalmente gerenciado, sem necessidade de servidor.</p>
+            </div>
+
+            <div class="pros">
+                <strong>Vantagens:</strong>
+                <ul class="feature-list">
+                    <li>Hospedagem e banco de dados integrados</li>
+                    <li>Sincronização em tempo real</li>
+                    <li>Autenticação incluída (Google, Facebook, etc)</li>
+                    <li>Plano gratuito generoso</li>
+                    <li>Scaling automático</li>
+                    <li>Muito fácil integrar com JavaScript</li>
+                    <li>Função Cloud Functions para lógica backend</li>
+                </ul>
+            </div>
+
+            <div class="cons">
+                <strong>Desvantagens:</strong>
+                <ul class="feature-list" style="list-style-type: none; padding: 0;">
+                    <li style="padding: 8px 0; padding-left: 0;">❌ Pode ficar caro com muitos dados</li>
+                    <li style="padding: 8px 0; padding-left: 0;">❌ Menos flexível para queries complexas</li>
+                    <li style="padding: 8px 0; padding-left: 0;">❌ Requer compreensão de regras de segurança</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <strong>Estrutura de dados Firebase recomendada:</strong>
+                <div class="code-block">
+{
+  "users": {
+    "userId123": {
+      "name": "Laércio",
+      "email": "laercio@example.com",
+      "avatar": "😎",
+      "totalScore": 45670,
+      "level": 75,
+      "joinDate": "2024-12-18",
+      "gameProgress": {
+        "guessingNumber": {
+          "currentLevel": 50,
+          "bestScores": { "easy": 3, "medium": 5 }
+        },
+        "quiz": {
+          "currentLevel": 40,
+          "categories": { "historia": 80, "ciencia": 75 }
+        }
+      }
+    }
+  },
+  "gameScores": {
+    "guessingNumber": {
+      "level_1_easy": { "userId": "123", "attempts": 3, "time": 1000 },
+      "level_2_medium": { "userId": "456", "attempts": 5, "time": 2000 }
+    }
+  },
+  "rankings": {
+    "global": {
+      "userId1": { "score": 95850, "rank": 1 },
+      "userId2": { "score": 92340, "rank": 2 }
+    }
+  },
+  "achievements": {
+    "userId123": {
+      "beginner": { "unlockedAt": "2024-12-18", "progress": 100 },
+      "warrior": { "unlockedAt": "2024-12-20", "progress": 100 }
+    }
+  }
+}
+                </div>
+            </div>
+
+            <h3>2️⃣ MongoDB + Node.js/Express (RECOMENDADO PARA CONTROLE TOTAL)</h3>
+            
+            <div class="recommendation">
+                <h3>✨ Por que escolher:</h3>
+                <p>Se você quer controle total e está disposto a gerenciar um servidor. Excelente escalabilidade.</p>
+            </div>
+
+            <div class="pros">
+                <strong>Vantagens:</strong>
+                <ul class="feature-list">
+                    <li>Totalmente customizável</li>
+                    <li>Ótimo para dados não-relacionais (JSON)</li>
+                    <li>Escalabilidade horizontal</li>
+                    <li>Comunidade JavaScript forte</li>
+                    <li>Integração perfeita com Node.js</li>
+                    <li>Mais barato em larga escala</li>
+                </ul>
+            </div>
+
+            <div class="cons">
+                <strong>Desvantagens:</strong>
+                <ul class="feature-list" style="list-style-type: none; padding: 0;">
+                    <li style="padding: 8px 0; padding-left: 0;">❌ Precisa gerenciar servidor próprio ou cloud (AWS, DigitalOcean)</li>
+                    <li style="padding: 8px 0; padding-left: 0;">❌ Maior complexidade de setup</li>
+                    <li style="padding: 8px 0; padding-left: 0;">❌ Custo de hospedagem VPS/servidor</li>
+                </ul>
+            </div>
+
+            <div class="code-block">
+// Exemplo de API com Express
+app.get('/api/user/:userId', async (req, res) => {
+  const user = await User.findById(req.params.userId);
+  res.json(user);
+});
+
+app.post('/api/game-score', async (req, res) => {
+  const score = await GameScore.create(req.body);
+  res.json(score);
+});
+            </div>
+
+            <h3>3️⃣ Supabase (ALTERNATIVA MODERNA AO FIREBASE)</h3>
+            
+            <div class="recommendation">
+                <h3>✨ Por que escolher:</h3>
+                <p>Open-source, PostgreSQL, autenticação integrada e mais barato que Firebase.</p>
+            </div>
+
+            <div class="pros">
+                <strong>Vantagens:</strong>
+                <ul class="feature-list">
+                    <li>Open-source</li>
+                    <li>PostgreSQL (relacional e poderoso)</li>
+                    <li>Autenticação incluída</li>
+                    <li>Plano gratuito bom</li>
+                    <li>Realtime com WebSockets</li>
+                    <li>Mais controle que Firebase</li>
+                </ul>
+            </div>
+
+            <div class="cons">
+                <strong>Desvantagens:</strong>
+                <ul class="feature-list" style="list-style-type: none; padding: 0;">
+                    <li style="padding: 8px 0; padding-left: 0;">❌ Comunidade menor que Firebase</li>
+                    <li style="padding: 8px 0; padding-left: 0;">❌ Menos integrações prontas</li>
+                </ul>
+            </div>
+
+            <h3>4️⃣ SQLite + Flask/Django (PARA DESENVOLVIMENTO LOCAL)</h3>
+            <p>Se você quer começar simples e está fazendo testes locais no seu PC.</p>
+
+        </div>
+
+        <div class="section">
+            <h2>📊 Tabela Comparativa</h2>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Critério</th>
+                        <th>Firebase</th>
+                        <th>MongoDB</th>
+                        <th>Supabase</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Custo Inicial</strong></td>
+                        <td>Gratuito</td>
+                        <td>Servidor pago</td>
+                        <td>Gratuito</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Facilidade de Setup</strong></td>
+                        <td>Muito fácil</td>
+                        <td>Moderado</td>
+                        <td>Muito fácil</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Escalabilidade</strong></td>
+                        <td>Automática</td>
+                        <td>Manual/Automática</td>
+                        <td>Automática</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Queries Complexas</strong></td>
+                        <td>Limitadas</td>
+                        <td>Muito poderosas</td>
+                        <td>Muito poderosas</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Realtime</strong></td>
+                        <td>✅ Nativo</td>
+                        <td>❌ Requer setup</td>
+                        <td>✅ Nativo</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Autenticação</strong></td>
+                        <td>✅ Incluída</td>
+                        <td>❌ Requer setup</td>
+                        <td>✅ Incluída</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Para Iniciantes</strong></td>
+                        <td>⭐⭐⭐⭐⭐</td>
+                        <td>⭐⭐⭐</td>
+                        <td>⭐⭐⭐⭐⭐</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>🏗️ Arquitetura Recomendada (Firebase)</h2>
+            
+            <div class="architecture-diagram">
+┌─────────────────────────────────────────────┐
+│         Navegador do Usuário                 │
+│  (HTML + CSS + JavaScript do Jogo)           │
+└────────────────┬────────────────────────────┘
+                 │
+                 ├─ Salva dados localmente
+                 │  (localStorage)
+                 │
+                 └─ Sincroniza com Firebase
+                    (quando há internet)
+                    │
+        ┌───────────┴─────────────┐
+        │                         │
+   ┌────▼─────┐            ┌─────▼──────┐
+   │ Firebase  │            │ Realtime   │
+   │ Firestore │            │ Database   │
+   │           │            │            │
+   │ - Usuários│            │ - Scores   │
+   │ - Perfis  │            │ - Rankings │
+   │ - Config  │            │ - Chats    │
+   └───────────┘            └────────────┘
+        │
+        └──────────────┬──────────────┐
+                       │              │
+                  ┌────▼────┐   ┌────▼────┐
+                  │ Cloud    │   │ Storage │
+                  │Functions │   │ (avatares)
+                  └──────────┘   └─────────┘
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>💾 Estrutura de Dados Detalhada</h2>
+
+            <h3>Coleção: users</h3>
+            <div class="code-block">
+{
+  "uid": "string (ID único do Firebase Auth)",
+  "email": "string",
+  "name": "string",
+  "avatar": "string (emoji)",
+  "joinDate": "timestamp",
+  "totalScore": "number",
+  "currentLevel": "number",
+  "achievements": ["array de IDs"],
+  "preferences": {
+    "language": "pt-BR",
+    "notifications": "boolean",
+    "theme": "dark|light"
+  }
+}
+            </div>
+
+            <h3>Coleção: gameScores</h3>
+            <div class="code-block">
+{
+  "gameId": "string",
+  "userId": "string",
+  "level": "number",
+  "difficulty": "string",
+  "score": "number",
+  "timeSpent": "number (ms)",
+  "completedAt": "timestamp",
+  "bestAttempts": "number",
+  "bonus": "number"
+}
+            </div>
+
+            <h3>Coleção: rankings</h3>
+            <div class="code-block">
+{
+  "userId": "string",
+  "rank": "number",
+  "totalScore": "number",
+  "weeklyScore": "number",
+  "monthlyScore": "number",
+  "gamesCompleted": "number",
+  "winRate": "number (0-100)",
+  "lastUpdated": "timestamp"
+}
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔌 Como Integrar Firebase com seu Site</h2>
+
+            <h3>Passo 1: Setup do Firebase</h3>
+            <div class="code-block">
+// 1. Criar projeto em https://firebase.google.com
+// 2. Copiar código de inicialização
+
+// Adicionar no seu HTML ou JS:
+&lt;script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"&gt;&lt;/script&gt;
+&lt;script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js"&gt;&lt;/script&gt;
+&lt;script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js"&gt;&lt;/script&gt;
+
+// Inicializar
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "seu-projeto.firebaseapp.com",
+  projectId: "seu-projeto",
+  storageBucket: "seu-projeto.appspot.com",
+  messagingSenderId: "123456789",
+  appId: "1:123456789:web:abc123"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+            </div>
+
+            <h3>Passo 2: Salvar Dados do Jogo</h3>
+            <div class="code-block">
+import { doc, setDoc, updateDoc } from "firebase/firestore";
+
+// Quando o usuário completa um nível
+async function saveGameScore(userId, gameId, levelData) {
+  try {
+    await setDoc(doc(db, "gameScores", `${userId}_${gameId}_${levelData.level}`), {
+      userId: userId,
+      gameId: gameId,
+      level: levelData.level,
+      score: levelData.score,
+      completedAt: new Date(),
+      difficulty: levelData.difficulty
+    });
+  } catch (error) {
+    console.error("Erro ao salvar:", error);
+  }
+}
+            </div>
+
+            <h3>Passo 3: Ler Dados do Ranking</h3>
+            <div class="code-block">
+import { collection, query, orderBy, limit, getDocs } from "firebase/firestore";
+
+async function getTopRanking() {
+  const q = query(
+    collection(db, "rankings"),
+    orderBy("totalScore", "desc"),
+    limit(10)
+  );
+  
+  const querySnapshot = await getDocs(q);
+  const ranking = [];
+  
+  querySnapshot.forEach((doc) => {
+    ranking.push({
+      id: doc.id,
+      ...doc.data()
+    });
+  });
+  
+  return ranking;
+}
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎯 Recomendação Final</h2>
+            
+            <div class="recommendation">
+                <h3>Para seu projeto específico:</h3>
+                <p><strong>Use Firebase + Firestore</strong></p>
+                <p>
+                    ✅ Você está começando com um site em Google Sites<br>
+                    ✅ Quer implementar rápido sem gerenciar servidor<br>
+                    ✅ Precisa de sistema em tempo real para ranking<br>
+                    ✅ Quer integração fácil com JavaScript<br>
+                    ✅ Pode começar grátis e escalar conforme crescer
+                </p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📚 Recursos Úteis</h2>
+            <ul class="feature-list">
+                <li><strong>Firebase Docs:</strong> https://firebase.google.com/docs</li>
+                <li><strong>Firestore Tutorial:</strong> https://firebase.google.com/docs/firestore/quickstart</li>
+                <li><strong>Firebase Auth:</strong> https://firebase.google.com/docs/auth</li>
+                <li><strong>Supabase:</strong> https://supabase.com</li>
+                <li><strong>MongoDB Atlas:</strong> https://www.mongodb.com/cloud/atlas</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>Documento criado para o projeto Passatempo - Site de Jogos | Laércio 2024</p>
+        </div>
+    </div>
+</body>
+</html>

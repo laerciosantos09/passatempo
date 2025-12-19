@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking Global - Passatempo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        .back-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .back-btn:hover {
+            opacity: 0.8;
+        }
+
+        h1 {
+            color: #333;
+            flex: 1;
+            text-align: center;
+        }
+
+        .tabs {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            padding: 12px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .profile-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .profile-avatar {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .profile-rank {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .ranking-list {
+            margin-bottom: 30px;
+        }
+
+        .ranking-item {
+            display: grid;
+            grid-template-columns: 60px 1fr 100px 100px;
+            gap: 15px;
+            align-items: center;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+
+        .ranking-item:hover {
+            background: #efefef;
+            transform: translateX(5px);
+        }
+
+        .ranking-position {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            color: #667eea;
+        }
+
+        .ranking-position.top3 {
+            color: #ffc107;
+            font-size: 28px;
+        }
+
+        .ranking-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ranking-avatar {
+            font-size: 32px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ranking-details h3 {
+            color: #333;
+            margin-bottom: 3px;
+            font-size: 14px;
+        }
+
+        .ranking-details p {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .ranking-score {
+            font-weight: bold;
+            color: #667eea;
+            text-align: center;
+        }
+
+        .ranking-change {
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .ranking-change.up {
+            color: #28a745;
+        }
+
+        .ranking-change.down {
+            color: #dc3545;
+        }
+
+        .filter-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-btn {
+            padding: 10px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #ffc107;
+            color: #333;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .achievement {
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #ddd;
+            transition: all 0.3s;
+        }
+
+        .achievement.unlocked {
+            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+            border-color: #ff9800;
+            color: white;
+        }
+
+        .achievement.locked {
+            opacity: 0.5;
+        }
+
+        .achievement-icon {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .achievement-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+
+        .achievement-desc {
+            font-size: 10px;
+            opacity: 0.7;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .message.info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        @media (max-width: 768px) {
+            .ranking-item {
+                grid-template-columns: 40px 1fr 70px;
+            }
+
+            .ranking-change {
+                display: none;
+            }
+
+            .profile-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-group {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="back-btn" onclick="goBack()">← Voltar</button>
+            <h1>🏆 Ranking Global</h1>
+            <div style="width: 100px;"></div>
+        </div>
+
+        <div class="message" id="message"></div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('global')">Global</button>
+            <button class="tab-btn" onclick="switchTab('friends')">Amigos</button>
+            <button class="tab-btn" onclick="switchTab('achievements')">Conquistas</button>
+        </div>
+
+        <!-- Aba Global -->
+        <div class="tab-content active" id="tab-global">
+            <div class="profile-section" id="userProfile"></div>
+
+            <div class="filter-group">
+                <button class="filter-btn active" onclick="filterRanking('all')">Todos</button>
+                <button class="filter-btn" onclick="filterRanking('week')">Essa Semana</button>
+                <button class="filter-btn" onclick="filterRanking('month')">Esse Mês</button>
+            </div>
+
+            <div class="ranking-list" id="globalRanking"></div>
+        </div>
+
+        <!-- Aba Amigos -->
+        <div class="tab-content" id="tab-friends">
+            <div class="message" id="friendsMessage" style="display: block;">
+                💡 Convide seus amigos para aparecerem aqui!
+            </div>
+
+            <div class="filter-group">
+                <button class="filter-btn active" onclick="filterFriends('active')">Ativos</button>
+                <button class="filter-btn" onclick="filterFriends('top')">Top Pontuação</button>
+                <button class="filter-btn" onclick="filterFriends('recent')">Recentes</button>
+            </div>
+
+            <div class="ranking-list" id="friendsRanking"></div>
+        </div>
+
+        <!-- Aba Conquistas -->
+        <div class="tab-content" id="tab-achievements">
+            <h2 style="margin-bottom: 20px; color: #333;">Suas Conquistas</h2>
+            <div class="achievement-grid" id="achievementsGrid"></div>
+        </div>
+    </div>
+
+    <script>
+        // Dados simulados de ranking
+        const rankingData = {
+            players: [
+                { id: 1, name: 'ProGamer', avatar: '👾', score: 95850, level: 150, games: 'Todos', change: '+5', rank: 1 },
+                { id: 2, name: 'MemoryMaster', avatar: '🧠', score: 92340, level: 145, games: 'Memória', change: '+2', rank: 2 },
+                { id: 3, name: 'QuizKing', avatar: '🤴', score: 89120, level: 140, games: 'Quiz', change: '-1', rank: 3 },
+                { id: 4, name: 'FastClicker', avatar: '⚡', score: 85600, level: 135, games: 'Reação', change: '+3', rank: 4 },
+                { id: 5, name: 'WordWizard', avatar: '🧙', score: 82340, level: 130, games: 'Palavras', change: '0', rank: 5 },
+                { id: 6, name: 'NumberNinja', avatar: '🥷', score: 79850, level: 125, games: 'Números', change: '-2', rank: 6 },
+                { id: 7, name: 'GamingGuru', avatar: '👨‍🏫', score: 76540, level: 120, games: 'Todos', change: '+1', rank: 7 },
+                { id: 8, name: 'TopPlayer', avatar: '🏅', score: 73210, level: 115, games: 'Todos', change: '+4', rank: 8 },
+                { id: 9, name: 'Você', avatar: '😎', score: 45670, level: 75, games: 'Todos', change: '+15', rank: 247 },
+                { id: 10, name: 'CasualGamer', avatar: '🎮', score: 68900, level: 110, games: 'Todos', change: '-3', rank: 10 }
+            ],
+            achievements: [
+                { name: 'Iniciante', icon: '🌱', desc: 'Complete seu primeiro jogo', unlocked: true },
+                { name: 'Guerreiro', icon: '⚔️', desc: 'Ganhe 10 jogos', unlocked: true },
+                { name: 'Campeão', icon: '🏆', desc: 'Atinja posição Top 10', unlocked: false },
+                { name: 'Mestre da Memória', icon: '🧠', desc: 'Complete 50 níveis da Memória', unlocked: true },
+                { name: 'Velocista', icon: '🏃', desc: 'Complete 50 níveis de Reação', unlocked: false },
+                { name: 'Inteligência', icon: '🎓', desc: 'Score 80% no Quiz', unlocked: true },
+                { name: 'Persistência', icon: '💪', desc: 'Jogue por 7 dias seguidos', unlocked: false },
+                { name: 'Misterioso', icon: '🔍', desc: 'Encontre um código secreto', unlocked: false },
+                { name: 'Lendário', icon: '👑', desc: 'Atinja rank 1', unlocked: false }
+            ]
+        };
+
+        const userProfile = {
+            name: 'Você',
+            avatar: '😎',
+            rank: 247,
+            score: 45670,
+            level: 75,
+            gamesPlayed: 250,
+            winRate: '68%'
+        };
+
+        let currentFilter = 'all';
+        let currentFriendsFilter = 'active';
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tabName === 'global') renderGlobalRanking();
+            if (tabName === 'friends') renderFriendsRanking();
+            if (tabName === 'achievements') renderAchievements();
+        }
+
+        function renderUserProfile() {
+            const profile = document.getElementById('userProfile');
+            profile.innerHTML = `
+                <div class="profile-avatar">${userProfile.avatar}</div>
+                <div class="profile-name">${userProfile.name}</div>
+                <div class="profile-rank">🏅 Posição #${userProfile.rank}</div>
+                <div class="profile-stats">
+                    <div class="stat">
+                        <div class="stat-label">Pontos</div>
+                        <div class="stat-value">${userProfile.score.toLocaleString('pt-BR')}</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Nível</div>
+                        <div class="stat-value">${userProfile.level}</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Taxa de Vitória</div>
+                        <div class="stat-value">${userProfile.winRate}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderGlobalRanking() {
+            const ranking = document.getElementById('globalRanking');
+            ranking.innerHTML = '';
+
+            rankingData.players.forEach((player, idx) => {
+                const isUser = player.id === 9;
+                const topThree = idx < 3;
+                
+                const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : '';
+                const item = document.createElement('div');
+                item.className = `ranking-item ${isUser ? 'highlight' : ''}`;
+                item.style.background = isUser ? '#fff3cd' : '#f5f5f5';
+                
+                item.innerHTML = `
+                    <div class="ranking-position ${topThree ? 'top3' : ''}">${medal || '#' + player.rank}</div>
+                    <div class="ranking-info">
+                        <div class="ranking-avatar">${player.avatar}</div>
+                        <div class="ranking-details">
+                            <h3>${player.name}</h3>
+                            <p>Nível ${player.level}</p>
+                        </div>
+                    </div>
+                    <div class="ranking-score">${player.score.toLocaleString('pt-BR')}</div>
+                    <div class="ranking-change ${player.change.startsWith('+') ? 'up' : 'down'}">${player.change}</div>
+                `;
+                ranking.appendChild(item);
+            });
+        }
+
+        function renderFriendsRanking() {
+            const ranking = document.getElementById('friendsRanking');
+            ranking.innerHTML = '';
+
+            const friends = rankingData.players.slice(0, 5);
+            friends.forEach((friend, idx) => {
+                const item = document.createElement('div');
+                item.className = 'ranking-item';
+                
+                item.innerHTML = `
+                    <div class="ranking-position">#${friend.rank}</div>
+                    <div class="ranking-info">
+                        <div class="ranking-avatar">${friend.avatar}</div>
+                        <div class="ranking-details">
+                            <h3>${friend.name}</h3>
+                            <p>Nível ${friend.level}</p>
+                        </div>
+                    </div>
+                    <div class="ranking-score">${friend.score.toLocaleString('pt-BR')}</div>
+                `;
+                ranking.appendChild(item);
+            });
+        }
+
+        function renderAchievements() {
+            const grid = document.getElementById('achievementsGrid');
+            grid.innerHTML = '';
+
+            rankingData.achievements.forEach(ach => {
+                const card = document.createElement('div');
+                card.className = `achievement ${ach.unlocked ? 'unlocked' : 'locked'}`;
+                card.innerHTML = `
+                    <div class="achievement-icon">${ach.icon}</div>
+                    <div class="achievement-name">${ach.name}</div>
+                    <div class="achievement-desc">${ach.desc}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterRanking(type) {
+            document.querySelectorAll('#tab-global .filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            currentFilter = type;
+            renderGlobalRanking();
+        }
+
+        function filterFriends(type) {
+            document.querySelectorAll('#tab-friends .filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            currentFriendsFilter = type;
+            renderFriendsRanking();
+        }
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        // Inicializar
+        renderUserProfile();
+        renderGlobalRanking();
+        renderAchievements();
+    </script>
+</body>
+</html>

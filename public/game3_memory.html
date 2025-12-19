@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Memória - Passatempo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        .back-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: opacity 0.3s;
+        }
+
+        .back-btn:hover {
+            opacity: 0.8;
+        }
+
+        h1 {
+            color: #333;
+            flex: 1;
+            text-align: center;
+        }
+
+        .menu-screen {
+            display: block;
+        }
+
+        .menu-screen.hidden {
+            display: none;
+        }
+
+        .difficulty-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .difficulty-card {
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+        }
+
+        .difficulty-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .difficulty-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .difficulty-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+
+        .difficulty-desc {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .game-screen {
+            display: none;
+        }
+
+        .game-screen.active {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .game-info {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            text-align: center;
+        }
+
+        .info-box {
+            padding: 10px;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+            min-height: 400px;
+        }
+
+        .card {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .card:hover:not(.matched):not(.flipped) {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .card.flipped {
+            background: white;
+            color: #667eea;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .card.matched {
+            background: #d4edda;
+            color: #28a745;
+            cursor: default;
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
+        }
+
+        .card.incorrect {
+            background: #f8d7da;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-restart {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-menu {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .next-level-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            display: none;
+            transition: transform 0.3s;
+        }
+
+        .next-level-btn.show {
+            display: block;
+        }
+
+        .next-level-btn:hover {
+            transform: scale(1.02);
+        }
+
+        .level-select {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .level-input {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            width: 100px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .level-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .go-btn {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .go-btn:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="back-btn" onclick="goBack()">← Voltar</button>
+            <h1>🎲 Jogo da Memória</h1>
+            <div style="width: 100px;"></div>
+        </div>
+
+        <!-- Menu de Dificuldade -->
+        <div class="menu-screen" id="menuScreen">
+            <p style="text-align: center; color: #666; margin-bottom: 20px;">Escolha o nível de dificuldade:</p>
+            <div class="difficulty-grid" id="difficultyGrid"></div>
+            
+            <div class="level-select" style="margin-top: 40px;">
+                <p style="color: #666; margin-bottom: 15px;">Ou vá para um nível específico:</p>
+                <input type="number" class="level-input" id="levelInput" min="1" max="200" placeholder="1-200">
+                <button class="go-btn" onclick="goToLevel()">Ir</button>
+            </div>
+            <p style="text-align: center; color: #999; margin-top: 20px; font-size: 12px;" id="completedInfo"></p>
+        </div>
+
+        <!-- Tela do Jogo -->
+        <div class="game-screen" id="gameScreen">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <div class="game-info">
+                <div class="info-box">
+                    <div class="info-label">Nível</div>
+                    <div class="info-value"><span id="currentLevel">1</span>/200</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">Pares</div>
+                    <div class="info-value"><span id="matchedPairs">0</span>/8</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">Movimentos</div>
+                    <div class="info-value" id="moves">0</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">Tempo</div>
+                    <div class="info-value" id="timer">0s</div>
+                </div>
+            </div>
+
+            <div class="message" id="message"></div>
+
+            <div class="game-board" id="gameBoard"></div>
+
+            <button class="next-level-btn" id="nextBtn" onclick="nextLevel()">Próximo Nível →</button>
+
+            <div class="button-group">
+                <button class="btn btn-restart" onclick="restartLevel()">🔄 Reiniciar</button>
+                <button class="btn btn-menu" onclick="backToMenu()">Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const gameState = {
+            currentLevel: 1,
+            totalLevels: 200,
+            difficulty: 'easy',
+            cards: [],
+            flipped: [],
+            matched: [],
+            moves: 0,
+            timer: 0,
+            timerInterval: null,
+            isProcessing: false,
+            completed: JSON.parse(localStorage.getItem('memoryGameCompleted') || '[]'),
+            bestScores: JSON.parse(localStorage.getItem('memoryGameBestScores') || '{}')
+        };
+
+        const difficulties = {
+            easy: { pairs: 4, size: 4 },
+            medium: { pairs: 6, size: 4 },
+            hard: { pairs: 8, size: 4 }
+        };
+
+        const emojis = ['🍎', '🍊', '🍋', '🍌', '🍉', '🍓', '🍒', '🍑', '🥝', '🍍', '🥭', '🍈', '🍐', '🥥', '🍟', '🌽'];
+
+        function initializeMenu() {
+            const grid = document.getElementById('difficultyGrid');
+            grid.innerHTML = '';
+
+            const difficultyOptions = [
+                { key: 'easy', name: 'Fácil', icon: '🟢', desc: '4 pares' },
+                { key: 'medium', name: 'Médio', icon: '🟡', desc: '6 pares' },
+                { key: 'hard', name: 'Difícil', icon: '🔴', desc: '8 pares' }
+            ];
+
+            difficultyOptions.forEach(opt => {
+                const card = document.createElement('div');
+                card.className = 'difficulty-card';
+                card.style.gridColumn = opt.key === 'hard' ? '1 / -1' : 'auto';
+                card.onclick = () => startGame(opt.key);
+                card.innerHTML = `
+                    <div class="difficulty-icon">${opt.icon}</div>
+                    <div class="difficulty-name">${opt.name}</div>
+                    <div class="difficulty-desc">${opt.desc}</div>
+                `;
+                grid.appendChild(card);
+            });
+
+            document.getElementById('completedInfo').textContent = `${gameState.completed.length}/200 níveis concluídos`;
+        }
+
+        function startGame(difficulty) {
+            gameState.difficulty = difficulty;
+            gameState.currentLevel = 1;
+            gameState.moves = 0;
+            gameState.timer = 0;
+            gameState.flipped = [];
+            gameState.matched = [];
+            gameState.isProcessing = false;
+
+            document.getElementById('menuScreen').classList.add('hidden');
+            document.getElementById('gameScreen').classList.add('active');
+
+            initializeGame();
+        }
+
+        function initializeGame() {
+            const config = difficulties[gameState.difficulty];
+            gameState.cards = [];
+
+            // Gerar pares com base no nível
+            const numPairs = config.pairs;
+            const selectedEmojis = emojis.slice(0, numPairs);
+
+            selectedEmojis.forEach(emoji => {
+                gameState.cards.push(emoji);
+                gameState.cards.push(emoji);
+            });
+
+            // Embaralhar
+            gameState.cards.sort(() => Math.random() - 0.5);
+
+            renderBoard();
+            startTimer();
+            updateUI();
+        }
+
+        function renderBoard() {
+            const board = document.getElementById('gameBoard');
+            board.innerHTML = '';
+
+            gameState.cards.forEach((emoji, index) => {
+                const card = document.createElement('button');
+                card.className = 'card';
+                card.onclick = () => flipCard(index);
+                card.id = `card-${index}`;
+
+                if (gameState.flipped.includes(index)) {
+                    card.classList.add('flipped');
+                    card.textContent = emoji;
+                }
+
+                if (gameState.matched.includes(index)) {
+                    card.classList.add('matched');
+                    card.textContent = emoji;
+                }
+
+                board.appendChild(card);
+            });
+        }
+
+        function flipCard(index) {
+            if (gameState.isProcessing || gameState.flipped.includes(index) || gameState.matched.includes(index)) {
+                return;
+            }
+
+            gameState.flipped.push(index);
+            renderBoard();
+
+            if (gameState.flipped.length === 2) {
+                gameState.isProcessing = true;
+                gameState.moves++;
+                updateUI();
+
+                const [first, second] = gameState.flipped;
+
+                if (gameState.cards[first] === gameState.cards[second]) {
+                    // Acertou
+                    setTimeout(() => {
+                        gameState.matched.push(first, second);
+                        gameState.flipped = [];
+                        gameState.isProcessing = false;
+                        renderBoard();
+                        updateUI();
+
+                        if (gameState.matched.length === gameState.cards.length) {
+                            levelWon();
+                        }
+                    }, 500);
+                } else {
+                    // Errou
+                    setTimeout(() => {
+                        document.getElementById(`card-${first}`).classList.add('incorrect');
+                        document.getElementById(`card-${second}`).classList.add('incorrect');
+
+                        setTimeout(() => {
+                            gameState.flipped = [];
+                            gameState.isProcessing = false;
+                            renderBoard();
+                        }, 300);
+                    }, 500);
+                }
+            }
+        }
+
+        function levelWon() {
+            const key = `${gameState.currentLevel}-${gameState.difficulty}`;
+            
+            if (!gameState.bestScores[key] || gameState.moves < gameState.bestScores[key]) {
+                gameState.bestScores[key] = gameState.moves;
+                localStorage.setItem('memoryGameBestScores', JSON.stringify(gameState.bestScores));
+            }
+
+            if (!gameState.completed.includes(gameState.currentLevel)) {
+                gameState.completed.push(gameState.currentLevel);
+                localStorage.setItem('memoryGameCompleted', JSON.stringify(gameState.completed));
+            }
+
+            clearInterval(gameState.timerInterval);
+            document.getElementById('message').className = 'message show success';
+            document.getElementById('message').textContent = `🎉 Parabéns! Você venceu em ${gameState.moves} movimentos!`;
+            document.getElementById('nextBtn').classList.add('show');
+        }
+
+        function nextLevel() {
+            if (gameState.currentLevel < gameState.totalLevels) {
+                gameState.currentLevel++;
+                gameState.moves = 0;
+                gameState.timer = 0;
+                gameState.flipped = [];
+                gameState.matched = [];
+                gameState.isProcessing = false;
+                document.getElementById('message').classList.remove('show');
+                document.getElementById('nextBtn').classList.remove('show');
+                initializeGame();
+            } else {
+                document.getElementById('message').textContent = '🏆 Você completou todos os 200 níveis!';
+                document.getElementById('nextBtn').textContent = 'Voltar ao Menu';
+                document.getElementById('nextBtn').onclick = backToMenu;
+            }
+        }
+
+        function restartLevel() {
+            gameState.moves = 0;
+            gameState.timer = 0;
+            gameState.flipped = [];
+            gameState.matched = [];
+            gameState.isProcessing = false;
+            document.getElementById('message').classList.remove('show');
+            document.getElementById('nextBtn').classList.remove('show');
+            initializeGame();
+        }
+
+        function backToMenu() {
+            clearInterval(gameState.timerInterval);
+            document.getElementById('menuScreen').classList.remove('hidden');
+            document.getElementById('gameScreen').classList.remove('active');
+        }
+
+        function goToLevel() {
+            const level = parseInt(document.getElementById('levelInput').value);
+            if (level >= 1 && level <= 200) {
+                gameState.currentLevel = level;
+                startGame(gameState.difficulty || 'easy');
+            } else {
+                alert('Digite um nível entre 1 e 200');
+            }
+        }
+
+        function startTimer() {
+            gameState.timer = 0;
+            if (gameState.timerInterval) clearInterval(gameState.timerInterval);
+            
+            gameState.timerInterval = setInterval(() => {
+                gameState.timer++;
+                document.getElementById('timer').textContent = gameState.timer + 's';
+            }, 1000);
+        }
+
+        function updateUI() {
+            document.getElementById('currentLevel').textContent = gameState.currentLevel;
+            document.getElementById('matchedPairs').textContent = gameState.matched.length / 2;
+            document.getElementById('moves').textContent = gameState.moves;
+            document.getElementById('progressFill').style.width = `${(gameState.currentLevel / gameState.totalLevels) * 100}%`;
+        }
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        initializeMenu();
+    </script>
+</body>
+</html>

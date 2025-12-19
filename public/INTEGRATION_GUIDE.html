@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia de Integração - Passatempo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #999;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        h2 {
+            color: #333;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-left: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        h3 {
+            color: #555;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        .step {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .step h3 {
+            color: white;
+            margin-top: 0;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.3);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .file-list {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .file-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .file-item:last-child {
+            border-bottom: none;
+        }
+
+        .file-name {
+            font-weight: bold;
+            color: #667eea;
+            font-family: monospace;
+        }
+
+        .file-desc {
+            color: #666;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .code-block {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+
+        .info-box {
+            background: #d1ecf1;
+            border-left: 4px solid #0c5460;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .architecture {
+            background: #f9f9f9;
+            border: 2px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .architecture pre {
+            margin: 0;
+            font-family: monospace;
+        }
+
+        ul {
+            margin-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Guia Completo de Integração - Passatempo</h1>
+        <div class="subtitle">Sistema Completo de 6 Jogos Interativos com 200 Níveis Cada</div>
+
+        <div class="success-box">
+            <strong>✅ O que você tem:</strong> 7 arquivos HTML completos e funcionais com todos os jogos integrados, sistema de pontuação, rankings e mais!
+        </div>
+
+        <h2>📦 Arquivos Criados</h2>
+
+        <div class="file-list">
+            <div class="file-item">
+                <div class="file-name">1. passatempo_homepage.html</div>
+                <div class="file-desc">Homepage principal com apresentação dos 6 jogos</div>
+            </div>
+            <div class="file-item">
+                <div class="file-name">2. game1_guess_number.html</div>
+                <div class="file-desc">🎯 Adivinha o Número - 200 níveis com dificuldades</div>
+            </div>
+            <div class="file-item">
+                <div class="file-name">3. game2_quiz.html</div>
+                <div class="file-desc">🧠 Quiz de Geral - 200 questões em 6 categorias</div>
+            </div>
+            <div class="file-item">
+                <div class="file-name">4. game3_memory.html</div>
+                <div class="file-desc">🎲 Jogo da Memória - 200 níveis progressivos</div>
+            </div>
+            <div class="file-item">
+                <div class="file-name">5. game4_reaction.html</div>
+                <div class="file-desc">⚡ Reação Rápida - 200 níveis de desafio</div>
+            </div>
+            <div class="file-item">
+                <div class="file-name">6. game5_crosswords.html</div>
+                <div class="file-desc">🎨 Palavras Cruzadas - 200 palavras em 3 categorias</div>
+            </div>
+            <div class="file-item">
+                <div class="file-name">7. game6_ranking.html</div>
+                <div class="file-desc">🏆 Ranking Global - Sistema de pontuação e conquistas</div>
+            </div>
+            <div class="file-item">
+                <div class="file-name">8. DATABASE_GUIDE.html</div>
+                <div class="file-desc">📚 Guia completo de banco de dados e integração</div>
+            </div>
+        </div>
+
+        <h2>🚀 Como Usar os Arquivos</h2>
+
+        <div class="step">
+            <h3><span class="step-number">1</span> Hospedagem Simples</h3>
+            <p>Você tem 2 opções principais:</p>
+            <ul>
+                <li><strong>Google Sites:</strong> Incorpore os arquivos HTML usando o bloco "Incorporar HTML"</li>
+                <li><strong>GitHub Pages:</strong> Faça upload no repositório e ative Pages (gratuito)</li>
+                <li><strong>Netlify:</strong> Arraste e solte os arquivos (muito fácil)</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h3><span class="step-number">2</span> Para Google Sites</h3>
+            <p>Em cada página HTML, copie TODO o código e:</p>
+            <ol>
+                <li>Abra seu site no Google Sites</li>
+                <li>Clique em "+" para adicionar um elemento</li>
+                <li>Procure por "Incorporar HTML"</li>
+                <li>Cole o código inteiro do arquivo HTML</li>
+                <li>Clique em Conectar</li>
+            </ol>
+            <div class="warning-box">
+                <strong>⚠️ Nota:</strong> Alguns scripts podem não funcionar perfeitamente no Google Sites por limitações de segurança. Use Netlify ou GitHub Pages para melhor compatibilidade.
+            </div>
+        </div>
+
+        <div class="step">
+            <h3><span class="step-number">3</span> Para Netlify (Recomendado)</h3>
+            <ol>
+                <li>Vá para <strong>netlify.com</strong></li>
+                <li>Crie uma conta gratuita</li>
+                <li>Crie um novo site: "Add new site"</li>
+                <li>Arraste e solte os arquivos HTML (crie uma pasta "Passatempo")</li>
+                <li>Seu site estará ao vivo em minutos!</li>
+            </ol>
+        </div>
+
+        <div class="step">
+            <h3><span class="step-number">4</span> Para GitHub Pages</h3>
+            <ol>
+                <li>Crie um repositório no GitHub</li>
+                <li>Faça upload dos arquivos</li>
+                <li>Vá para Settings → Pages</li>
+                <li>Escolha Branch "main"</li>
+                <li>Seu site estará em: <code>seu-usuario.github.io/repositorio</code></li>
+            </ol>
+        </div>
+
+        <h2>🔧 Estrutura da Aplicação</h2>
+
+        <div class="architecture">
+            <pre>
+Passatempo/
+│
+├── index.html (homepage)
+│
+├── Jogos/
+│   ├── game1_guess_number.html
+│   ├── game2_quiz.html
+│   ├── game3_memory.html
+│   ├── game4_reaction.html
+│   ├── game5_crosswords.html
+│   └── game6_ranking.html
+│
+└── Docs/
+    ├── DATABASE_GUIDE.html
+    └── README.md
+            </pre>
+        </div>
+
+        <h2>📊 Características Técnicas</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Aspecto</th>
+                    <th>Detalhes</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Armazenamento Local</td>
+                    <td>localStorage (salva progresso no navegador)</td>
+                    <td>✅ Funcionando</td>
+                </tr>
+                <tr>
+                    <td>Responsivo</td>
+                    <td>Funciona em mobile, tablet e desktop</td>
+                    <td>✅ Implementado</td>
+                </tr>
+                <tr>
+                    <td>Progresso do Usuário</td>
+                    <td>Salva nível, pontos, melhores tentativas</td>
+                    <td>✅ Implementado</td>
+                </tr>
+                <tr>
+                    <td>Ranking Global</td>
+                    <td>Simulado (pronto para banco de dados real)</td>
+                    <td>✅ Simulado</td>
+                </tr>
+                <tr>
+                    <td>Conquistas</td>
+                    <td>Sistema de badges desbloqueáveis</td>
+                    <td>✅ Implementado</td>
+                </tr>
+                <tr>
+                    <td>Sincronização em Tempo Real</td>
+                    <td>Requer Firebase/Banco de Dados</td>
+                    <td>⏳ Próxima Fase</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>🔌 Próximos Passos: Banco de Dados</h2>
+
+        <div class="info-box">
+            <strong>Atualmente:</strong> Os dados são salvos localmente no navegador (localStorage). Isso significa que cada dispositivo tem seus próprios dados.
+        </div>
+
+        <div class="info-box">
+            <strong>Para sincronizar entre dispositivos:</strong> Você precisa de um banco de dados real.
+        </div>
+
+        <h3>Opção A: Firebase (Recomendado para Iniciantes)</h3>
+
+        <div class="code-block">
+// 1. Adicionar Firebase ao seu HTML
+&lt;script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"&gt;&lt;/script&gt;
+&lt;script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js"&gt;&lt;/script&gt;
+
+// 2. Modificar a função de salvar no jogo
+async function saveGameScore(level, score) {
+    // Salvar localmente
+    localStorage.setItem('gameScore', score);
+    
+    // Salvar no Firebase
+    if (window.db) {
+        await setDoc(doc(window.db, "gameScores", userID + "_" + level), {
+            score: score,
+            level: level,
+            timestamp: new Date()
+        });
+    }
+}
+
+// 3. Carregar dados ao iniciar
+async function loadGameScore() {
+    const localScore = localStorage.getItem('gameScore');
+    
+    if (window.db) {
+        const firebaseScore = await getDoc(doc(window.db, "gameScores", userID + "_" + level));
+        return firebaseScore.data()?.score || localScore;
+    }
+    return localScore;
+}
+        </div>
+
+        <h3>Opção B: Implementação Simples sem Banco de Dados</h3>
+
+        <p>Se você não quer banco de dados agora, o sistema funciona perfeitamente com localStorage:</p>
+
+        <div class="success-box">
+            <strong>✅ Funcionalidades Disponíveis Sem BD:</strong>
+            <ul>
+                <li>Todos os 6 jogos funcionam normalmente</li>
+                <li>Salva progresso e pontuação</li>
+                <li>Ranking simulado (dados fictícios)</li>
+                <li>Conquistas desbloqueáveis</li>
+                <li>Dados persistem enquanto não limpar cache</li>
+            </ul>
+        </div>
+
+        <h2>⚙️ Customização e Modificação</h2>
+
+        <h3>Alterar Cores do Tema</h3>
+        <p>Nos arquivos CSS, procure por:</p>
+        <div class="code-block">
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        </div>
+        <p>Altere para suas cores. Exemplo:</p>
+        <div class="code-block">
+background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%);
+        </div>
+
+        <h3>Adicionar Mais Níveis</h3>
+        <p>Cada jogo tem um array de perguntas/dados. Para adicionar mais:</p>
+        <div class="code-block">
+// Em game2_quiz.html, na função generateHistoryQuestions()
+const questions = [
+    {
+        question: 'Sua pergunta aqui',
+        options: ['Opção 1', 'Opção 2', 'Opção 3', 'Opção 4'],
+        correct: 0  // índice da resposta correta
+    },
+    // Adicione mais questões aqui...
+];
+        </div>
+
+        <h3>Modificar Dificuldade</h3>
+        <div class="code-block">
+// Em game1_guess_number.html
+const difficultyConfig = {
+    easy: { min: 1, max: 50, levelRange: 50 },
+    medium: { min: 1, max: 100, levelRange: 100 },
+    hard: { min: 1, max: 500, levelRange: 500 },
+    extreme: { min: 1, max: 10000, levelRange: 10000 }  // Nova dificuldade
+};
+        </div>
+
+        <h2>🐛 Troubleshooting</h2>
+
+        <h3>O jogo não salva progresso</h3>
+        <ul>
+            <li>Verifique se localStorage está ativado no navegador</li>
+            <li>Tente limpar cache e recarregar</li>
+            <li>Abra o DevTools (F12) → Dados de Aplicação → localStorage</li>
+        </ul>
+
+        <h3>Jogo não funciona no Google Sites</h3>
+        <ul>
+            <li>Alguns scripts são bloqueados por segurança</li>
+            <li>Solução: Use Netlify ou GitHub Pages em vez de Google Sites</li>
+        </ul>
+
+        <h3>Ranking não atualiza</h3>
+        <ul>
+            <li>O ranking é simulado com dados fictícios</li>
+            <li>Sem banco de dados, cada dispositivo tem dados separados</li>
+            <li>Para ranking real, implemente Firebase (veja DATABASE_GUIDE.html)</li>
+        </ul>
+
+        <h2>📚 Recursos Recomendados</h2>
+
+        <ul>
+            <li><strong>Firebase Docs:</strong> https://firebase.google.com/docs</li>
+            <li><strong>Netlify:</strong> https://www.netlify.com</li>
+            <li><strong>GitHub Pages:</strong> https://pages.github.com</li>
+            <li><strong>MDN Web Docs:</strong> https://developer.mozilla.org</li>
+            <li><strong>W3Schools JavaScript:</strong> https://www.w3schools.com/js/</li>
+        </ul>
+
+        <h2>💡 Dicas de Produção</h2>
+
+        <div class="warning-box">
+            <strong>Antes de colocar em produção:</strong>
+            <ul>
+                <li>✅ Teste em diferentes navegadores (Chrome, Firefox, Safari, Edge)</li>
+                <li>✅ Teste em mobile (iOS e Android)</li>
+                <li>✅ Verifique se as imagens/emojis aparecem corretamente</li>
+                <li>✅ Teste a velocidade de carregamento</li>
+                <li>✅ Ative HTTPS para segurança</li>
+                <li>✅ Configure Google Analytics para acompanhar usuários</li>
+            </ul>
+        </div>
+
+        <h2>📞 Suporte e Contribuições</h2>
+
+        <p>Se encontrar problemas ou quiser melhorar:</p>
+        <ul>
+            <li>Abra uma issue no GitHub</li>
+            <li>Faça um fork e envie melhorias</li>
+            <li>Compartilhe feedback nos comentários</li>
+        </ul>
+
+        <div class="footer">
+            <p>Passatempo - Sistema Completo de Jogos | Criado com ❤️ | 2024</p>
+        </div>
+    </div>
+</body>
+</html>
