@@ -66,6 +66,7 @@
         .auth-buttons {
             display: flex;
             gap: 10px;
+            align-items: center;
         }
 
         .btn-login {
@@ -117,6 +118,7 @@
         .user-info {
             color: #333;
             font-weight: 500;
+            font-size: 14px;
         }
 
         /* Hero Section */
@@ -392,7 +394,6 @@
             <nav>
                 <a href="#jogos">Jogos</a>
                 <a href="#features">Sobre</a>
-                <a href="#contato">Contato</a>
                 <div class="auth-buttons">
                     <span class="user-info" id="userInfo" style="display: none;"></span>
                     <a href="ranking.html" class="btn-ranking" id="rankingBtn" style="display: none;">🏆 Ranking</a>
@@ -520,40 +521,48 @@
         <div class="footer-content">
             <h3>🎮 Passatempo</h3>
             <p style="margin: 10px 0; opacity: 0.8;">Seu lugar para passar o tempo se divertindo</p>
-            <div class="footer-links" id="contato">
+            <div class="footer-links">
                 <a href="#jogos">Jogos</a>
                 <a href="#features">Sobre</a>
                 <a href="#">Termos de Uso</a>
                 <a href="#">Privacidade</a>
-                <a href="#">Contato</a>
             </div>
             <p style="margin-top: 20px; opacity: 0.7; font-size: 12px;">© 2024 Passatempo. Todos os direitos reservados.</p>
         </div>
     </footer>
 
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js"></script>
     <script src="firebase-config.js"></script>
 
     <script>
-        const auth = firebase.auth();
+        console.log('=== Homepage Carregada ===');
 
         // Verificar se usuário está logado
-        auth.onAuthStateChanged((user) => {
+        firebase.auth().onAuthStateChanged((usuarioAtual) => {
             const loginBtn = document.getElementById('loginBtn');
             const logoutBtn = document.getElementById('logoutBtn');
             const rankingBtn = document.getElementById('rankingBtn');
             const userInfo = document.getElementById('userInfo');
 
-            if (user) {
-                // Usuário está logado
+            if (usuarioAtual) {
+                console.log('Usuário logado:', usuarioAtual.email);
                 loginBtn.style.display = 'none';
                 logoutBtn.style.display = 'block';
                 rankingBtn.style.display = 'block';
                 userInfo.style.display = 'block';
-                userInfo.textContent = `Olá, ${user.displayName || user.email.split('@')[0]}!`;
+                
+                // Buscar nome/apelido do Firestore
+                db.collection('usuarios').doc(usuarioAtual.uid).get().then((doc) => {
+                    if (doc.exists) {
+                        const apelido = doc.data().apelido || usuarioAtual.email.split('@')[0];
+                        userInfo.textContent = `Olá, ${apelido}!`;
+                    }
+                });
             } else {
-                // Usuário não está logado
+                console.log('Usuário não logado');
                 loginBtn.style.display = 'block';
                 logoutBtn.style.display = 'none';
                 rankingBtn.style.display = 'none';
@@ -561,15 +570,15 @@
             }
         });
 
-        function logout() {
+        // Função de logout
+        document.getElementById('logoutBtn').addEventListener('click', function() {
             if (confirm('Tem certeza que deseja sair?')) {
-                auth.signOut().then(() => {
+                firebase.auth().signOut().then(() => {
+                    console.log('Usuário deslogado');
                     window.location.reload();
                 });
             }
-        }
-
-        document.getElementById('logoutBtn').addEventListener('click', logout);
+        });
     </script>
 </body>
 </html>
