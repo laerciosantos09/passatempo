@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - passatemposp
+name: Build and deploy Node.js app to Azure Web App - passatemposp
 
 on:
   push:
@@ -18,22 +18,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up .NET Core
-        uses: actions/setup-dotnet@v4
+      - name: Set up Node.js version
+        uses: actions/setup-node@v3
         with:
-          dotnet-version: '10.x'
+          node-version: '24.x'
 
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
-
-      - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      - name: npm install, build, and test
+        run: |
+          npm install
+          npm run build --if-present
+          npm run test --if-present
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
-          name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          name: node-app
+          path: .
 
   deploy:
     runs-on: ubuntu-latest
@@ -46,16 +46,16 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
-          name: .net-app
+          name: node-app
       
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_727A0DCE16364C37A1A8BFF3C4ACC7AF }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_353875FDCA674ACE84D9ECDD5EC5E9AA }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_BC4C97E8A33141E6A9D063FDBDDE7B88 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_C1458D1DB4974DBD8AA4D79B1F487B78 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_AB77F667EF764EAAA962126619DD1A12 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_696C615FAFB9475B8D1E59060781E2E2 }}
 
-      - name: Deploy to Azure Web App
+      - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
