@@ -112,6 +112,7 @@
             background: #ffe6e6;
             border-radius: 4px;
             display: none;
+            border-left: 4px solid #e74c3c;
         }
 
         .error.show {
@@ -126,6 +127,7 @@
             background: #e6ffe6;
             border-radius: 4px;
             display: none;
+            border-left: 4px solid #27ae60;
         }
 
         .success.show {
@@ -156,57 +158,130 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #1976d2;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            color: #1976d2;
+            font-size: 13px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <div class="login-container">
+        <a href="index.html" class="back-link">← Voltar para Homepage</a>
+
         <!-- FORMULÁRIO DE LOGIN -->
         <form id="loginForm">
             <h1>🎮 Passatempo</h1>
+            
+            <div class="info-box">
+                💡 Use suas credenciais para fazer login
+            </div>
+
             <div class="form-group">
                 <label>Email:</label>
-                <input type="email" id="loginEmail" required placeholder="seu@email.com">
+                <input 
+                    type="email" 
+                    id="loginEmail" 
+                    required 
+                    placeholder="seu@email.com"
+                    autocomplete="email"
+                >
             </div>
             <div class="form-group">
                 <label>Senha:</label>
-                <input type="password" id="loginPassword" required placeholder="Mínimo 6 caracteres">
+                <input 
+                    type="password" 
+                    id="loginPassword" 
+                    required 
+                    placeholder="Sua senha"
+                    autocomplete="current-password"
+                >
             </div>
-            <button type="submit">Entrar</button>
+            <button type="submit" id="loginBtn">Entrar</button>
             <div id="loginError" class="error"></div>
             <div class="loading" id="loginLoading">
                 <div class="spinner"></div>
             </div>
             <div class="toggle-form">
-                Não tem conta? <a onclick="toggleForm()">Cadastre-se</a>
+                Não tem conta? <a onclick="toggleForm()">Cadastre-se aqui</a>
             </div>
         </form>
 
         <!-- FORMULÁRIO DE CADASTRO -->
         <form id="cadastroForm">
             <h1>🎮 Passatempo</h1>
+            
+            <div class="info-box">
+                💡 Crie sua conta para começar a jogar
+            </div>
+
             <div class="form-group">
                 <label>Nome:</label>
-                <input type="text" id="cadastroNome" required placeholder="Seu nome">
+                <input 
+                    type="text" 
+                    id="cadastroNome" 
+                    required 
+                    placeholder="Seu nome"
+                    minlength="3"
+                    autocomplete="name"
+                >
             </div>
             <div class="form-group">
                 <label>Email:</label>
-                <input type="email" id="cadastroEmail" required placeholder="seu@email.com">
+                <input 
+                    type="email" 
+                    id="cadastroEmail" 
+                    required 
+                    placeholder="seu@email.com"
+                    autocomplete="email"
+                >
             </div>
             <div class="form-group">
                 <label>Senha:</label>
-                <input type="password" id="cadastroPassword" required placeholder="Mínimo 6 caracteres">
+                <input 
+                    type="password" 
+                    id="cadastroPassword" 
+                    required 
+                    placeholder="Mínimo 6 caracteres"
+                    minlength="6"
+                    autocomplete="new-password"
+                >
             </div>
             <div class="form-group">
                 <label>Confirmar Senha:</label>
-                <input type="password" id="cadastroPasswordConfirm" required placeholder="Confirme a senha">
+                <input 
+                    type="password" 
+                    id="cadastroPasswordConfirm" 
+                    required 
+                    placeholder="Confirme a senha"
+                    minlength="6"
+                    autocomplete="new-password"
+                >
             </div>
-            <button type="submit">Cadastrar</button>
+            <button type="submit" id="cadastroBtn">Cadastrar</button>
             <div id="cadastroError" class="error"></div>
             <div class="loading" id="cadastroLoading">
                 <div class="spinner"></div>
             </div>
             <div class="toggle-form">
-                Já tem conta? <a onclick="toggleForm()">Faça login</a>
+                Já tem conta? <a onclick="toggleForm()">Faça login aqui</a>
             </div>
         </form>
     </div>
@@ -217,18 +292,26 @@
     <script src="firebase-config.js"></script>
 
     <script>
+        // Verificar se Firebase está carregado
+        if (typeof firebase === 'undefined') {
+            alert('Erro: Firebase não carregou. Verifique se firebase-config.js existe e está correto.');
+            console.error('Firebase não carregou!');
+        }
+
         const auth = firebase.auth();
         const db = firebase.firestore();
 
         function toggleForm() {
-            document.getElementById('loginForm').style.display = 
-                document.getElementById('loginForm').style.display === 'none' ? 'block' : 'none';
-            document.getElementById('cadastroForm').style.display = 
-                document.getElementById('cadastroForm').style.display === 'none' ? 'block' : 'none';
+            const loginForm = document.getElementById('loginForm');
+            const cadastroForm = document.getElementById('cadastroForm');
             
-            // Limpar campos
-            document.getElementById('loginForm').reset();
-            document.getElementById('cadastroForm').reset();
+            const loginDisplay = loginForm.style.display;
+            loginForm.style.display = loginDisplay === 'none' ? 'block' : 'none';
+            cadastroForm.style.display = loginDisplay === 'none' ? 'none' : 'block';
+            
+            // Limpar campos e erros
+            loginForm.reset();
+            cadastroForm.reset();
             document.getElementById('loginError').classList.remove('show');
             document.getElementById('cadastroError').classList.remove('show');
         }
@@ -236,27 +319,52 @@
         // LOGIN
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
+            const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
             const errorDiv = document.getElementById('loginError');
             const loadingDiv = document.getElementById('loginLoading');
+            const btn = document.getElementById('loginBtn');
 
+            // Limpar erro anterior
             errorDiv.classList.remove('show');
+            errorDiv.textContent = '';
             loadingDiv.style.display = 'block';
+            btn.disabled = true;
 
             try {
-                await auth.signInWithEmailAndPassword(email, password);
+                console.log('Tentando login com:', email);
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                console.log('Login bem-sucedido:', userCredential.user.email);
                 loadingDiv.style.display = 'none';
-                window.location.href = 'index.html';
+                btn.disabled = false;
+                // Redirecionar após 1 segundo
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
             } catch (error) {
                 loadingDiv.style.display = 'none';
+                btn.disabled = false;
+                console.error('Erro de login:', error.code, error.message);
+                
                 let mensagem = 'Erro ao fazer login';
-                if (error.code === 'auth/user-not-found') {
-                    mensagem = 'Email não encontrado';
-                } else if (error.code === 'auth/wrong-password') {
-                    mensagem = 'Senha incorreta';
-                } else if (error.code === 'auth/invalid-email') {
-                    mensagem = 'Email inválido';
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                        mensagem = '❌ Email não encontrado. Cadastre-se primeiro.';
+                        break;
+                    case 'auth/wrong-password':
+                        mensagem = '❌ Senha incorreta. Tente novamente.';
+                        break;
+                    case 'auth/invalid-email':
+                        mensagem = '❌ Email inválido.';
+                        break;
+                    case 'auth/user-disabled':
+                        mensagem = '❌ Esta conta foi desativada.';
+                        break;
+                    case 'auth/too-many-requests':
+                        mensagem = '❌ Muitas tentativas de login. Aguarde alguns minutos.';
+                        break;
+                    default:
+                        mensagem = `❌ ${error.message}`;
                 }
                 errorDiv.textContent = mensagem;
                 errorDiv.classList.add('show');
@@ -266,57 +374,101 @@
         // CADASTRO
         document.getElementById('cadastroForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const nome = document.getElementById('cadastroNome').value;
-            const email = document.getElementById('cadastroEmail').value;
+            const nome = document.getElementById('cadastroNome').value.trim();
+            const email = document.getElementById('cadastroEmail').value.trim();
             const password = document.getElementById('cadastroPassword').value;
             const passwordConfirm = document.getElementById('cadastroPasswordConfirm').value;
             const errorDiv = document.getElementById('cadastroError');
             const loadingDiv = document.getElementById('cadastroLoading');
+            const btn = document.getElementById('cadastroBtn');
 
-            // Validações
+            // Limpar erro anterior
+            errorDiv.classList.remove('show');
+            errorDiv.textContent = '';
+
+            // Validações no cliente
+            if (nome.length < 3) {
+                errorDiv.textContent = '❌ O nome deve ter no mínimo 3 caracteres';
+                errorDiv.classList.add('show');
+                return;
+            }
+
             if (password !== passwordConfirm) {
-                errorDiv.textContent = 'As senhas não correspondem';
+                errorDiv.textContent = '❌ As senhas não correspondem';
                 errorDiv.classList.add('show');
                 return;
             }
 
             if (password.length < 6) {
-                errorDiv.textContent = 'A senha deve ter no mínimo 6 caracteres';
+                errorDiv.textContent = '❌ A senha deve ter no mínimo 6 caracteres';
                 errorDiv.classList.add('show');
                 return;
             }
 
-            if (nome.trim().length < 3) {
-                errorDiv.textContent = 'O nome deve ter no mínimo 3 caracteres';
+            // Validar formato de email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                errorDiv.textContent = '❌ Email inválido';
                 errorDiv.classList.add('show');
                 return;
             }
 
-            errorDiv.classList.remove('show');
             loadingDiv.style.display = 'block';
+            btn.disabled = true;
 
             try {
-                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                console.log('Tentando cadastrar:', email);
                 
-                // Salvar nome do usuário no Firestore
-                await db.collection('usuarios').doc(userCredential.user.uid).set({
+                // Criar usuário
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const uid = userCredential.user.uid;
+                console.log('Usuário criado:', uid);
+                
+                // Salvar dados do usuário no Firestore
+                await db.collection('usuarios').doc(uid).set({
                     nome: nome,
                     email: email,
                     dataCriacao: new Date(),
-                    uid: userCredential.user.uid
+                    uid: uid
                 });
-
+                
+                console.log('Dados salvos no Firestore');
                 loadingDiv.style.display = 'none';
-                window.location.href = 'index.html';
+                btn.disabled = false;
+                
+                // Mostrar mensagem de sucesso
+                alert('✅ Cadastro realizado com sucesso! Bem-vindo ao Passatempo!');
+                
+                // Redirecionar após 2 segundos
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+                
             } catch (error) {
                 loadingDiv.style.display = 'none';
+                btn.disabled = false;
+                console.error('Erro de cadastro:', error.code, error.message);
+                
                 let mensagem = 'Erro ao cadastrar';
-                if (error.code === 'auth/email-already-in-use') {
-                    mensagem = 'Este email já está cadastrado';
-                } else if (error.code === 'auth/weak-password') {
-                    mensagem = 'A senha é muito fraca';
-                } else if (error.code === 'auth/invalid-email') {
-                    mensagem = 'Email inválido';
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        mensagem = '❌ Este email já está cadastrado. Use outro email.';
+                        break;
+                    case 'auth/weak-password':
+                        mensagem = '❌ A senha é muito fraca. Use uma senha mais forte.';
+                        break;
+                    case 'auth/invalid-email':
+                        mensagem = '❌ Email inválido.';
+                        break;
+                    case 'auth/operation-not-allowed':
+                        mensagem = '❌ Cadastro desativado. Contate o administrador.';
+                        break;
+                    case 'PERMISSION_DENIED':
+                    case 'permission-denied':
+                        mensagem = '❌ Erro de permissão. Verifique as regras do Firestore.';
+                        break;
+                    default:
+                        mensagem = `❌ ${error.message}`;
                 }
                 errorDiv.textContent = mensagem;
                 errorDiv.classList.add('show');
@@ -326,9 +478,15 @@
         // Verificar se usuário já está logado
         auth.onAuthStateChanged((user) => {
             if (user) {
+                console.log('Usuário já está logado:', user.email);
                 window.location.href = 'index.html';
             }
         });
+
+        // Log para debugging
+        console.log('Login page carregada');
+        console.log('Firebase auth:', typeof auth);
+        console.log('Firebase db:', typeof db);
     </script>
 </body>
 </html>
