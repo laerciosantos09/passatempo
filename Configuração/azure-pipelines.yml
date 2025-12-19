@@ -1,6 +1,9 @@
 # azure-pipelines.yml
+# Pipeline para Azure App Service - Instala npm automaticamente
+
 trigger:
   - main
+  - develop
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -9,50 +12,96 @@ variables:
   nodeVersion: '18.x'
   azureSubscription: 'seu-subscription-id'
   appServiceName: 'seu-app-service-name'
+  buildOutputPath: '$(Build.ArtifactStagingDirectory)'
 
 stages:
   - stage: Build
+    displayName: 'Build Stage'
     jobs:
-      - job: BuildAndTest
-        displayName: 'Build e Testes'
+      - job: BuildJob
+        displayName: 'Build e Teste'
         steps:
+          # Setup Node.js
           - task: UseNode@1
             inputs:
               version: $(nodeVersion)
-            displayName: 'Setup Node.js'
+            displayName: '📦 Setup Node.js $(nodeVersion)'
 
+          # Limpar cache npm (recomendado)
           - script: |
-              npm ci
-            displayName: 'Instalar dependências'
-
-          - script: |
-              npm run db:migrate
-            displayName: 'Migrar banco de dados'
+              npm cache clean --force
+            displayName: '🧹 Limpar cache npm'
             continueOnError: true
 
+          # Instalar dependências com npm ci (mais confiável)
+          - script: |
+              npm ci --production
+            displayName: '📥 Instalar dependências (npm ci)'
+            env:
+              npm_config_loglevel: verbose
+
+          # Verificar instalação
+          - script: |
+              npm list --depth=0
+            displayName: '✅ Verificar pacotes instalados'
+
+          # Rodar migrações (comentado por padrão - rodar manualmente primeira vez)
+          - script: |
+              echo "⚠️ Migrações devem ser executadas manualmente na primeira vez"
+              echo "Execute no App Service: npm run db:migrate"
+            displayName: '💾 Info: Migrações'
+
+          # Criar arquivo de deploy
+          - script: |
+              echo "Preparando arquivos para deploy..."
+              ls -la
+              du -sh .
+            displayName: '📂 Preparar arquivos'
+
+          # Publicar artifacts
+          - task: PublishBuildArtifacts@1
+            inputs:
+              pathToPublish: '$(Build.SourcesDirectory)'
+              artifactName: 'passatempo-app'
+              publishLocation: 'Container'
+            displayName: '📤 Publicar artifacts'
+
   - stage: Deploy
+    displayName: 'Deploy Stage'
     condition: succeeded()
+    dependsOn: Build
     jobs:
       - deployment: DeployToAzure
-        displayName: 'Deploy para Azure App Service'
+        displayName: '🚀 Deploy para Azure App Service'
         environment: production
         strategy:
           runOnce:
             deploy:
               steps:
+                # Download artifacts
                 - task: DownloadBuildArtifacts@0
                   inputs:
                     buildType: 'current'
                     downloadType: 'all'
+                  displayName: '⬇️ Download artifacts'
 
+                # Verificar arquivos
+                - script: |
+                    echo "Arquivos para deploy:"
+                    ls -la $(Pipeline.Workspace)/passatempo-app/ | head -20
+                    echo "Verificando package.json..."
+                    test -f $(Pipeline.Workspace)/passatempo-app/package.json && echo "✅ package.json encontrado" || echo "❌ package.json NÃO encontrado"
+                  displayName: '🔍 Verificar arquivos'
+
+                # Deploy para App Service
                 - task: AzureRmWebAppDeployment@4
                   inputs:
                     azureSubscription: $(azureSubscription)
                     appType: 'webAppLinux'
                     WebAppName: $(appServiceName)
-                    packageForLinux: '$(System.DefaultWorkingDirectory)'
-                    RuntimeStack: 'NODE|18'
-                    StartupCommand: 'npm start'
+                    packageForLinux: '$(Pipeline.Workspace)/passatempo-app'
+                    RuntimeStack: 'NODE|18-lts'
+                    StartupCommand: 'npm install && npm start'
                     AppSettings: |
                       -DATABASE_HOST $(DATABASE_HOST)
                       -DATABASE_PORT $(DATABASE_PORT)
@@ -62,4 +111,12 @@ stages:
                       -JWT_SECRET $(JWT_SECRET)
                       -NODE_ENV production
                       -CORS_ORIGIN $(CORS_ORIGIN)
-                  displayName: 'Deploy App Service'
+                      -PORT 8080
+                  displayName: '🚀 Deploy App Service com npm install'
+
+                # Post-deployment script
+                - script: |
+                    echo "✅ Deploy concluído!"
+                    echo "Aplicação estará disponível em:"
+                    echo "https://$(appServiceName).azurewebsites.net"
+                  displayName: '✨ Deploy concluído'
