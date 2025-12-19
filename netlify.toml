@@ -6,7 +6,3 @@
   command = ""
   publish = "public"
 
-[[redirects]]
-  from = "/*"
-  to = "/passatempo_homepage.html"
-  status = 200
