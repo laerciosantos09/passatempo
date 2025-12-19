@@ -21,20 +21,40 @@
             padding: 20px;
         }
 
-        .login-container {
+        .container {
             background: white;
             padding: 40px;
             border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
             width: 100%;
-            max-width: 400px;
+            max-width: 450px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
         }
 
         h1 {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
             color: #333;
             font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
         }
 
         .form-group {
@@ -45,40 +65,48 @@
             display: block;
             margin-bottom: 8px;
             color: #333;
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 14px;
         }
 
         input {
             width: 100%;
             padding: 12px;
-            border: 2px solid #ddd;
+            border: 2px solid #e0e0e0;
             border-radius: 8px;
             font-size: 14px;
-            transition: border-color 0.3s;
+            transition: border-color 0.3s, box-shadow 0.3s;
             font-family: inherit;
         }
 
         input:focus {
             outline: none;
             border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
         }
 
         button {
-            width: 100%;
+            flex: 1;
             padding: 12px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
             border-radius: 8px;
             font-weight: 600;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: opacity 0.3s;
             font-size: 16px;
+            cursor: pointer;
+            transition: opacity 0.3s, transform 0.2s;
         }
 
-        button:hover {
-            opacity: 0.9;
+        button:hover:not(:disabled) {
+            opacity: 0.95;
+            transform: translateY(-2px);
         }
 
         button:disabled {
@@ -86,33 +114,43 @@
             cursor: not-allowed;
         }
 
-        .toggle-form {
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #ddd;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #e8e8e8;
+        }
+
+        .toggle-link {
             text-align: center;
             margin-top: 20px;
             color: #666;
             font-size: 14px;
         }
 
-        .toggle-form a {
+        .toggle-link a {
             color: #667eea;
             text-decoration: none;
-            cursor: pointer;
             font-weight: 600;
+            cursor: pointer;
         }
 
-        .toggle-form a:hover {
+        .toggle-link a:hover {
             text-decoration: underline;
         }
 
         .error {
             color: #e74c3c;
             font-size: 13px;
-            margin-top: 5px;
-            padding: 8px;
-            background: #ffe6e6;
-            border-radius: 4px;
-            display: none;
+            padding: 10px;
+            background: #ffebee;
             border-left: 4px solid #e74c3c;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
         }
 
         .error.show {
@@ -122,36 +160,32 @@
         .success {
             color: #27ae60;
             font-size: 13px;
-            margin-top: 5px;
-            padding: 8px;
-            background: #e6ffe6;
-            border-radius: 4px;
-            display: none;
+            padding: 10px;
+            background: #e8f5e9;
             border-left: 4px solid #27ae60;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
         }
 
         .success.show {
             display: block;
         }
 
-        #cadastroForm {
-            display: none;
-        }
-
         .loading {
             display: none;
             text-align: center;
-            margin-top: 10px;
+            padding: 20px;
         }
 
         .spinner {
-            border: 3px solid #ddd;
+            border: 3px solid #f3f3f3;
             border-top: 3px solid #667eea;
             border-radius: 50%;
-            width: 20px;
-            height: 20px;
+            width: 30px;
+            height: 30px;
             animation: spin 1s linear infinite;
-            margin: 0 auto;
+            margin: 0 auto 10px;
         }
 
         @keyframes spin {
@@ -162,194 +196,250 @@
         .info-box {
             background: #e3f2fd;
             border-left: 4px solid #1976d2;
-            padding: 10px;
+            padding: 12px;
             border-radius: 4px;
             margin-bottom: 20px;
             color: #1976d2;
             font-size: 13px;
+            line-height: 1.5;
         }
 
-        .back-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 600;
+        .form-hidden {
+            display: none;
         }
 
-        .back-link:hover {
-            text-decoration: underline;
+        .form-visible {
+            display: block;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <a href="index.html" class="back-link">← Voltar para Homepage</a>
+    <div class="container">
+        <a href="index.html" class="back-link">← Voltar para Jogos</a>
 
         <!-- FORMULÁRIO DE LOGIN -->
-        <form id="loginForm">
+        <div id="loginForm" class="form-visible">
             <h1>🎮 Passatempo</h1>
-            
+            <p class="subtitle">Faça login para jogar</p>
+
             <div class="info-box">
-                💡 Use suas credenciais para fazer login
+                💡 Primeira vez aqui? Clique em "Criar Conta" para se cadastrar
             </div>
 
-            <div class="form-group">
-                <label>Email:</label>
-                <input 
-                    type="email" 
-                    id="loginEmail" 
-                    required 
-                    placeholder="seu@email.com"
-                    autocomplete="email"
-                >
-            </div>
-            <div class="form-group">
-                <label>Senha:</label>
-                <input 
-                    type="password" 
-                    id="loginPassword" 
-                    required 
-                    placeholder="Sua senha"
-                    autocomplete="current-password"
-                >
-            </div>
-            <button type="submit" id="loginBtn">Entrar</button>
             <div id="loginError" class="error"></div>
-            <div class="loading" id="loginLoading">
+
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginEmail">Email:</label>
+                    <input 
+                        type="email" 
+                        id="loginEmail" 
+                        required 
+                        placeholder="seu@email.com"
+                        autocomplete="email"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="loginPassword">Senha:</label>
+                    <input 
+                        type="password" 
+                        id="loginPassword" 
+                        required 
+                        placeholder="Sua senha"
+                        autocomplete="current-password"
+                    >
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" id="loginBtn">Entrar</button>
+                    <button type="button" class="btn-secondary" onclick="mostrarCadastro()">Criar Conta</button>
+                </div>
+            </form>
+
+            <div id="loginLoading" class="loading">
                 <div class="spinner"></div>
+                <p>Fazendo login...</p>
             </div>
-            <div class="toggle-form">
-                Não tem conta? <a onclick="toggleForm()">Cadastre-se aqui</a>
-            </div>
-        </form>
+        </div>
 
         <!-- FORMULÁRIO DE CADASTRO -->
-        <form id="cadastroForm">
+        <div id="cadastroForm" class="form-hidden">
             <h1>🎮 Passatempo</h1>
-            
+            <p class="subtitle">Crie sua conta para começar</p>
+
             <div class="info-box">
-                💡 Crie sua conta para começar a jogar
+                💡 Sua senha será criptografada e segura no Firebase
             </div>
 
-            <div class="form-group">
-                <label>Nome:</label>
-                <input 
-                    type="text" 
-                    id="cadastroNome" 
-                    required 
-                    placeholder="Seu nome"
-                    minlength="3"
-                    autocomplete="name"
-                >
-            </div>
-            <div class="form-group">
-                <label>Email:</label>
-                <input 
-                    type="email" 
-                    id="cadastroEmail" 
-                    required 
-                    placeholder="seu@email.com"
-                    autocomplete="email"
-                >
-            </div>
-            <div class="form-group">
-                <label>Senha:</label>
-                <input 
-                    type="password" 
-                    id="cadastroPassword" 
-                    required 
-                    placeholder="Mínimo 6 caracteres"
-                    minlength="6"
-                    autocomplete="new-password"
-                >
-            </div>
-            <div class="form-group">
-                <label>Confirmar Senha:</label>
-                <input 
-                    type="password" 
-                    id="cadastroPasswordConfirm" 
-                    required 
-                    placeholder="Confirme a senha"
-                    minlength="6"
-                    autocomplete="new-password"
-                >
-            </div>
-            <button type="submit" id="cadastroBtn">Cadastrar</button>
             <div id="cadastroError" class="error"></div>
-            <div class="loading" id="cadastroLoading">
+            <div id="cadastroSuccess" class="success"></div>
+
+            <form onsubmit="handleCadastro(event)">
+                <div class="form-group">
+                    <label for="cadastroNome">Nome Completo:</label>
+                    <input 
+                        type="text" 
+                        id="cadastroNome" 
+                        required 
+                        placeholder="João Silva"
+                        minlength="3"
+                        autocomplete="name"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="cadastroApelido">Apelido (para o Ranking):</label>
+                    <input 
+                        type="text" 
+                        id="cadastroApelido" 
+                        required 
+                        placeholder="Seu apelido no ranking"
+                        minlength="2"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="cadastroEmail">Email:</label>
+                    <input 
+                        type="email" 
+                        id="cadastroEmail" 
+                        required 
+                        placeholder="seu@email.com"
+                        autocomplete="email"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="cadastroPassword">Senha:</label>
+                    <input 
+                        type="password" 
+                        id="cadastroPassword" 
+                        required 
+                        placeholder="Mínimo 6 caracteres"
+                        minlength="6"
+                        autocomplete="new-password"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="cadastroPasswordConfirm">Confirmar Senha:</label>
+                    <input 
+                        type="password" 
+                        id="cadastroPasswordConfirm" 
+                        required 
+                        placeholder="Digite a senha novamente"
+                        minlength="6"
+                        autocomplete="new-password"
+                    >
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" id="cadastroBtn">Cadastrar</button>
+                    <button type="button" class="btn-secondary" onclick="mostrarLogin()">Já tenho Conta</button>
+                </div>
+            </form>
+
+            <div id="cadastroLoading" class="loading">
                 <div class="spinner"></div>
+                <p>Criando sua conta...</p>
             </div>
-            <div class="toggle-form">
-                Já tem conta? <a onclick="toggleForm()">Faça login aqui</a>
-            </div>
-        </form>
+        </div>
+
+        <div class="toggle-link" id="toggleLink">
+            Não tem conta? <a onclick="mostrarCadastro()">Crie aqui</a>
+        </div>
     </div>
 
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js"></script>
     <script src="firebase-config.js"></script>
 
     <script>
-        // Verificar se Firebase está carregado
-        if (typeof firebase === 'undefined') {
-            alert('Erro: Firebase não carregou. Verifique se firebase-config.js existe e está correto.');
-            console.error('Firebase não carregou!');
-        }
+        console.log('=== Login Page Iniciada ===');
+        console.log('Firebase versão:', firebase.SDK_VERSION);
 
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        function toggleForm() {
-            const loginForm = document.getElementById('loginForm');
-            const cadastroForm = document.getElementById('cadastroForm');
+        // Verificar se usuário já está logado
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                console.log('Usuário já está logado:', user.email);
+                window.location.href = 'index.html';
+            }
+        });
+
+        function mostrarCadastro() {
+            document.getElementById('loginForm').classList.add('form-hidden');
+            document.getElementById('loginForm').classList.remove('form-visible');
+            document.getElementById('cadastroForm').classList.remove('form-hidden');
+            document.getElementById('cadastroForm').classList.add('form-visible');
+            document.getElementById('toggleLink').innerHTML = 'Já tem conta? <a onclick="mostrarLogin()">Faça login</a>';
             
-            const loginDisplay = loginForm.style.display;
-            loginForm.style.display = loginDisplay === 'none' ? 'block' : 'none';
-            cadastroForm.style.display = loginDisplay === 'none' ? 'none' : 'block';
-            
-            // Limpar campos e erros
-            loginForm.reset();
-            cadastroForm.reset();
+            // Limpar formulários
+            document.getElementById('loginForm').querySelector('form').reset();
             document.getElementById('loginError').classList.remove('show');
+        }
+
+        function mostrarLogin() {
+            document.getElementById('cadastroForm').classList.add('form-hidden');
+            document.getElementById('cadastroForm').classList.remove('form-visible');
+            document.getElementById('loginForm').classList.remove('form-hidden');
+            document.getElementById('loginForm').classList.add('form-visible');
+            document.getElementById('toggleLink').innerHTML = 'Não tem conta? <a onclick="mostrarCadastro()">Crie aqui</a>';
+            
+            // Limpar formulários
+            document.getElementById('cadastroForm').querySelector('form').reset();
             document.getElementById('cadastroError').classList.remove('show');
         }
 
-        // LOGIN
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        async function handleLogin(event) {
+            event.preventDefault();
+            
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
             const errorDiv = document.getElementById('loginError');
             const loadingDiv = document.getElementById('loginLoading');
             const btn = document.getElementById('loginBtn');
 
-            // Limpar erro anterior
             errorDiv.classList.remove('show');
-            errorDiv.textContent = '';
             loadingDiv.style.display = 'block';
             btn.disabled = true;
 
             try {
-                console.log('Tentando login com:', email);
-                const userCredential = await auth.signInWithEmailAndPassword(email, password);
-                console.log('Login bem-sucedido:', userCredential.user.email);
-                loadingDiv.style.display = 'none';
-                btn.disabled = false;
-                // Redirecionar após 1 segundo
+                console.log('Tentando login com email:', email);
+                await auth.signInWithEmailAndPassword(email, password);
+                console.log('Login bem-sucedido!');
+                
                 setTimeout(() => {
                     window.location.href = 'index.html';
-                }, 1000);
+                }, 500);
             } catch (error) {
+                console.error('Erro de login:', error.code, error.message);
                 loadingDiv.style.display = 'none';
                 btn.disabled = false;
-                console.error('Erro de login:', error.code, error.message);
-                
+
                 let mensagem = 'Erro ao fazer login';
                 switch (error.code) {
                     case 'auth/user-not-found':
-                        mensagem = '❌ Email não encontrado. Cadastre-se primeiro.';
+                        mensagem = '❌ Email não encontrado. Crie uma conta primeiro!';
                         break;
                     case 'auth/wrong-password':
                         mensagem = '❌ Senha incorreta. Tente novamente.';
@@ -361,101 +451,109 @@
                         mensagem = '❌ Esta conta foi desativada.';
                         break;
                     case 'auth/too-many-requests':
-                        mensagem = '❌ Muitas tentativas de login. Aguarde alguns minutos.';
+                        mensagem = '❌ Muitas tentativas. Aguarde alguns minutos.';
                         break;
                     default:
                         mensagem = `❌ ${error.message}`;
                 }
+                
                 errorDiv.textContent = mensagem;
                 errorDiv.classList.add('show');
             }
-        });
+        }
 
-        // CADASTRO
-        document.getElementById('cadastroForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        async function handleCadastro(event) {
+            event.preventDefault();
+            
             const nome = document.getElementById('cadastroNome').value.trim();
+            const apelido = document.getElementById('cadastroApelido').value.trim();
             const email = document.getElementById('cadastroEmail').value.trim();
             const password = document.getElementById('cadastroPassword').value;
             const passwordConfirm = document.getElementById('cadastroPasswordConfirm').value;
+            
             const errorDiv = document.getElementById('cadastroError');
             const loadingDiv = document.getElementById('cadastroLoading');
             const btn = document.getElementById('cadastroBtn');
 
-            // Limpar erro anterior
             errorDiv.classList.remove('show');
-            errorDiv.textContent = '';
+            loadingDiv.style.display = 'block';
+            btn.disabled = true;
 
-            // Validações no cliente
+            // Validações
             if (nome.length < 3) {
-                errorDiv.textContent = '❌ O nome deve ter no mínimo 3 caracteres';
+                errorDiv.textContent = '❌ Nome deve ter no mínimo 3 caracteres';
                 errorDiv.classList.add('show');
+                loadingDiv.style.display = 'none';
+                btn.disabled = false;
+                return;
+            }
+
+            if (apelido.length < 2) {
+                errorDiv.textContent = '❌ Apelido deve ter no mínimo 2 caracteres';
+                errorDiv.classList.add('show');
+                loadingDiv.style.display = 'none';
+                btn.disabled = false;
                 return;
             }
 
             if (password !== passwordConfirm) {
                 errorDiv.textContent = '❌ As senhas não correspondem';
                 errorDiv.classList.add('show');
+                loadingDiv.style.display = 'none';
+                btn.disabled = false;
                 return;
             }
 
             if (password.length < 6) {
-                errorDiv.textContent = '❌ A senha deve ter no mínimo 6 caracteres';
+                errorDiv.textContent = '❌ Senha deve ter no mínimo 6 caracteres';
                 errorDiv.classList.add('show');
+                loadingDiv.style.display = 'none';
+                btn.disabled = false;
                 return;
             }
-
-            // Validar formato de email
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                errorDiv.textContent = '❌ Email inválido';
-                errorDiv.classList.add('show');
-                return;
-            }
-
-            loadingDiv.style.display = 'block';
-            btn.disabled = true;
 
             try {
-                console.log('Tentando cadastrar:', email);
+                console.log('Criando conta para:', email);
                 
-                // Criar usuário
+                // Criar usuário no Firebase Auth
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                 const uid = userCredential.user.uid;
-                console.log('Usuário criado:', uid);
                 
-                // Salvar dados do usuário no Firestore
+                console.log('Usuário criado com ID:', uid);
+                
+                // Salvar dados adicionais no Firestore (não criptografado por padrão)
+                // Nota: Senha NÃO é salva aqui! Firebase Authentication já criptografa
                 await db.collection('usuarios').doc(uid).set({
+                    uid: uid,
                     nome: nome,
+                    apelido: apelido,
                     email: email,
                     dataCriacao: new Date(),
-                    uid: uid
+                    // Senha NÃO é armazenada aqui - Firebase já criptografa no Authentication
                 });
                 
-                console.log('Dados salvos no Firestore');
+                console.log('Dados do usuário salvos no Firestore');
                 loadingDiv.style.display = 'none';
                 btn.disabled = false;
                 
-                // Mostrar mensagem de sucesso
-                alert('✅ Cadastro realizado com sucesso! Bem-vindo ao Passatempo!');
+                alert('✅ Conta criada com sucesso! Bem-vindo ao Passatempo!');
                 
-                // Redirecionar após 2 segundos
                 setTimeout(() => {
                     window.location.href = 'index.html';
-                }, 2000);
+                }, 1000);
                 
             } catch (error) {
+                console.error('Erro de cadastro:', error.code, error.message);
                 loadingDiv.style.display = 'none';
                 btn.disabled = false;
-                console.error('Erro de cadastro:', error.code, error.message);
-                
+
                 let mensagem = 'Erro ao cadastrar';
                 switch (error.code) {
                     case 'auth/email-already-in-use':
-                        mensagem = '❌ Este email já está cadastrado. Use outro email.';
+                        mensagem = '❌ Este email já está cadastrado. Use outro email!';
                         break;
                     case 'auth/weak-password':
-                        mensagem = '❌ A senha é muito fraca. Use uma senha mais forte.';
+                        mensagem = '❌ Senha muito fraca. Use uma senha mais forte.';
                         break;
                     case 'auth/invalid-email':
                         mensagem = '❌ Email inválido.';
@@ -463,30 +561,14 @@
                     case 'auth/operation-not-allowed':
                         mensagem = '❌ Cadastro desativado. Contate o administrador.';
                         break;
-                    case 'PERMISSION_DENIED':
-                    case 'permission-denied':
-                        mensagem = '❌ Erro de permissão. Verifique as regras do Firestore.';
-                        break;
                     default:
                         mensagem = `❌ ${error.message}`;
                 }
+                
                 errorDiv.textContent = mensagem;
                 errorDiv.classList.add('show');
             }
-        });
-
-        // Verificar se usuário já está logado
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                console.log('Usuário já está logado:', user.email);
-                window.location.href = 'index.html';
-            }
-        });
-
-        // Log para debugging
-        console.log('Login page carregada');
-        console.log('Firebase auth:', typeof auth);
-        console.log('Firebase db:', typeof db);
+        }
     </script>
 </body>
 </html>
