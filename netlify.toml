@@ -1,0 +1,12 @@
+# Configuração Netlify para Passatempo
+# Coloque este arquivo na RAIZ do repositório (ao lado da pasta public/)
+# Não coloque em public/
+
+[build]
+  command = ""
+  publish = "public"
+
+[[redirects]]
+  from = "/*"
+  to = "/passatempo_homepage.html"
+  status = 200
