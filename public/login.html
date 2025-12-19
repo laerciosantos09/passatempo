@@ -37,6 +37,7 @@
             text-decoration: none;
             font-weight: 600;
             font-size: 14px;
+            cursor: pointer;
         }
 
         .back-link:hover {
@@ -69,7 +70,7 @@
             font-size: 14px;
         }
 
-        input {
+        input, select, textarea {
             width: 100%;
             padding: 12px;
             border: 2px solid #e0e0e0;
@@ -79,10 +80,15 @@
             font-family: inherit;
         }
 
-        input:focus {
+        input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 60px;
         }
 
         .button-group {
@@ -124,28 +130,10 @@
             background: #e8e8e8;
         }
 
-        .toggle-link {
-            text-align: center;
-            margin-top: 20px;
-            color: #666;
-            font-size: 14px;
-        }
-
-        .toggle-link a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .toggle-link a:hover {
-            text-decoration: underline;
-        }
-
         .error {
             color: #e74c3c;
             font-size: 13px;
-            padding: 10px;
+            padding: 12px;
             background: #ffebee;
             border-left: 4px solid #e74c3c;
             border-radius: 4px;
@@ -154,21 +142,6 @@
         }
 
         .error.show {
-            display: block;
-        }
-
-        .success {
-            color: #27ae60;
-            font-size: 13px;
-            padding: 10px;
-            background: #e8f5e9;
-            border-left: 4px solid #27ae60;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        .success.show {
             display: block;
         }
 
@@ -212,6 +185,24 @@
             display: block;
         }
 
+        .links {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 13px;
+        }
+
+        .links a {
+            color: #667eea;
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 0 5px;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
         @media (max-width: 600px) {
             .container {
                 padding: 25px;
@@ -229,22 +220,17 @@
 </head>
 <body>
     <div class="container">
-        <a href="index.html" class="back-link">← Voltar para Jogos</a>
-
         <!-- FORMULÁRIO DE LOGIN -->
         <div id="loginForm" class="form-visible">
+            <a href="index.html" class="back-link">← Voltar para Jogos</a>
             <h1>🎮 Passatempo</h1>
             <p class="subtitle">Faça login para jogar</p>
 
-            <div class="info-box">
-                💡 Primeira vez aqui? Clique em "Criar Conta" para se cadastrar
-            </div>
-
             <div id="loginError" class="error"></div>
 
-            <form onsubmit="handleLogin(event)">
+            <form onsubmit="fazerLogin(event)">
                 <div class="form-group">
-                    <label for="loginEmail">Email:</label>
+                    <label>Email:</label>
                     <input 
                         type="email" 
                         id="loginEmail" 
@@ -255,7 +241,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="loginPassword">Senha:</label>
+                    <label>Senha:</label>
                     <input 
                         type="password" 
                         id="loginPassword" 
@@ -267,7 +253,11 @@
 
                 <div class="button-group">
                     <button type="submit" id="loginBtn">Entrar</button>
-                    <button type="button" class="btn-secondary" onclick="mostrarCadastro()">Criar Conta</button>
+                    <button type="button" class="btn-secondary" onclick="irParaCadastro()">Cadastrar</button>
+                </div>
+
+                <div class="links">
+                    <a onclick="irParaRecuperacao()">Esqueci minha senha</a>
                 </div>
             </form>
 
@@ -279,78 +269,92 @@
 
         <!-- FORMULÁRIO DE CADASTRO -->
         <div id="cadastroForm" class="form-hidden">
+            <a href="javascript:irParaLogin()" class="back-link">← Voltar</a>
             <h1>🎮 Passatempo</h1>
             <p class="subtitle">Crie sua conta para começar</p>
 
             <div class="info-box">
-                💡 Sua senha será criptografada e segura no Firebase
+                💡 A pergunta de segurança será usada para recuperar a senha
             </div>
 
             <div id="cadastroError" class="error"></div>
-            <div id="cadastroSuccess" class="success"></div>
 
-            <form onsubmit="handleCadastro(event)">
+            <form onsubmit="fazerCadastro(event)">
                 <div class="form-group">
-                    <label for="cadastroNome">Nome Completo:</label>
+                    <label>Nome Completo:</label>
                     <input 
                         type="text" 
                         id="cadastroNome" 
                         required 
                         placeholder="João Silva"
                         minlength="3"
-                        autocomplete="name"
                     >
                 </div>
 
                 <div class="form-group">
-                    <label for="cadastroApelido">Apelido (para o Ranking):</label>
+                    <label>Apelido (para o Ranking):</label>
                     <input 
                         type="text" 
                         id="cadastroApelido" 
                         required 
-                        placeholder="Seu apelido no ranking"
+                        placeholder="Seu apelido"
                         minlength="2"
                     >
                 </div>
 
                 <div class="form-group">
-                    <label for="cadastroEmail">Email:</label>
+                    <label>Email:</label>
                     <input 
                         type="email" 
                         id="cadastroEmail" 
                         required 
                         placeholder="seu@email.com"
-                        autocomplete="email"
                     >
                 </div>
 
                 <div class="form-group">
-                    <label for="cadastroPassword">Senha:</label>
+                    <label>Senha:</label>
                     <input 
                         type="password" 
                         id="cadastroPassword" 
                         required 
                         placeholder="Mínimo 6 caracteres"
                         minlength="6"
-                        autocomplete="new-password"
                     >
                 </div>
 
                 <div class="form-group">
-                    <label for="cadastroPasswordConfirm">Confirmar Senha:</label>
+                    <label>Confirmar Senha:</label>
                     <input 
                         type="password" 
                         id="cadastroPasswordConfirm" 
                         required 
-                        placeholder="Digite a senha novamente"
+                        placeholder="Digite novamente"
                         minlength="6"
-                        autocomplete="new-password"
                     >
                 </div>
 
+                <div class="form-group">
+                    <label>Pergunta de Segurança:</label>
+                    <textarea 
+                        id="cadastroPergunta" 
+                        required 
+                        placeholder="Ex: Qual é o nome do seu pet? (criada por você)"
+                    ></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Resposta da Pergunta:</label>
+                    <textarea 
+                        id="cadastroResposta" 
+                        required 
+                        placeholder="Ex: Miau (a resposta será convertida em minúsculas)"
+                    ></textarea>
+                </div>
+
                 <div class="button-group">
-                    <button type="submit" id="cadastroBtn">Cadastrar</button>
-                    <button type="button" class="btn-secondary" onclick="mostrarLogin()">Já tenho Conta</button>
+                    <button type="submit" id="cadastroBtn">Criar Conta</button>
+                    <button type="button" class="btn-secondary" onclick="irParaLogin()">Cancelar</button>
                 </div>
             </form>
 
@@ -360,57 +364,102 @@
             </div>
         </div>
 
-        <div class="toggle-link" id="toggleLink">
-            Não tem conta? <a onclick="mostrarCadastro()">Crie aqui</a>
+        <!-- FORMULÁRIO DE RECUPERAÇÃO DE SENHA -->
+        <div id="recuperacaoForm" class="form-hidden">
+            <a href="javascript:irParaLogin()" class="back-link">← Voltar</a>
+            <h1>🎮 Recuperar Senha</h1>
+            <p class="subtitle">Recupere o acesso à sua conta</p>
+
+            <div id="recuperacaoError" class="error"></div>
+
+            <div id="etapa1" class="form-visible">
+                <p style="margin-bottom: 20px; color: #666; font-size: 14px;">
+                    Insira seu email para recuperar a senha:
+                </p>
+
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input 
+                        type="email" 
+                        id="recuperacaoEmail" 
+                        required 
+                        placeholder="seu@email.com"
+                    >
+                </div>
+
+                <button type="button" onclick="buscarPerguntaSeguranca()">Próximo</button>
+            </div>
+
+            <div id="etapa2" class="form-hidden">
+                <div class="form-group">
+                    <label id="perguntaLabel"></label>
+                    <textarea 
+                        id="respostaRecuperacao" 
+                        placeholder="Digite sua resposta"
+                    ></textarea>
+                </div>
+
+                <button type="button" onclick="verificarResposta()">Verificar</button>
+            </div>
+
+            <div id="etapa3" class="form-hidden">
+                <div class="form-group">
+                    <label>Nova Senha:</label>
+                    <input 
+                        type="password" 
+                        id="novasenha" 
+                        required 
+                        placeholder="Mínimo 6 caracteres"
+                        minlength="6"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Confirmar Nova Senha:</label>
+                    <input 
+                        type="password" 
+                        id="novasenhaConfirm" 
+                        required 
+                        placeholder="Confirme"
+                        minlength="6"
+                    >
+                </div>
+
+                <button type="button" onclick="alterarSenha()">Alterar Senha</button>
+            </div>
+
+            <div id="recuperacaoLoading" class="loading">
+                <div class="spinner"></div>
+                <p id="recuperacaoLoadingText">Processando...</p>
+            </div>
         </div>
     </div>
 
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js"></script>
     <script src="firebase-config.js"></script>
 
     <script>
-        console.log('=== Login Page Iniciada ===');
-        console.log('Firebase versão:', firebase.SDK_VERSION);
+        console.log('=== LOGIN PAGE INICIADA ===');
 
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // Verificar se usuário já está logado
+        // Variáveis globais para recuperação
+        let emailRecuperacao = '';
+        let uidRecuperacao = '';
+
+        // Verificar se já está logado
         auth.onAuthStateChanged((user) => {
             if (user) {
-                console.log('Usuário já está logado:', user.email);
+                console.log('Usuário já logado:', user.email);
                 window.location.href = 'index.html';
             }
         });
 
-        function mostrarCadastro() {
-            document.getElementById('loginForm').classList.add('form-hidden');
-            document.getElementById('loginForm').classList.remove('form-visible');
-            document.getElementById('cadastroForm').classList.remove('form-hidden');
-            document.getElementById('cadastroForm').classList.add('form-visible');
-            document.getElementById('toggleLink').innerHTML = 'Já tem conta? <a onclick="mostrarLogin()">Faça login</a>';
-            
-            // Limpar formulários
-            document.getElementById('loginForm').querySelector('form').reset();
-            document.getElementById('loginError').classList.remove('show');
-        }
-
-        function mostrarLogin() {
-            document.getElementById('cadastroForm').classList.add('form-hidden');
-            document.getElementById('cadastroForm').classList.remove('form-visible');
-            document.getElementById('loginForm').classList.remove('form-hidden');
-            document.getElementById('loginForm').classList.add('form-visible');
-            document.getElementById('toggleLink').innerHTML = 'Não tem conta? <a onclick="mostrarCadastro()">Crie aqui</a>';
-            
-            // Limpar formulários
-            document.getElementById('cadastroForm').querySelector('form').reset();
-            document.getElementById('cadastroError').classList.remove('show');
-        }
-
-        async function handleLogin(event) {
+        // ============ LOGIN ============
+        async function fazerLogin(event) {
             event.preventDefault();
             
             const email = document.getElementById('loginEmail').value.trim();
@@ -424,7 +473,7 @@
             btn.disabled = true;
 
             try {
-                console.log('Tentando login com email:', email);
+                console.log('Fazendo login com:', email);
                 await auth.signInWithEmailAndPassword(email, password);
                 console.log('Login bem-sucedido!');
                 
@@ -432,37 +481,26 @@
                     window.location.href = 'index.html';
                 }, 500);
             } catch (error) {
-                console.error('Erro de login:', error.code, error.message);
+                console.error('Erro:', error.code, error.message);
                 loadingDiv.style.display = 'none';
                 btn.disabled = false;
 
-                let mensagem = 'Erro ao fazer login';
-                switch (error.code) {
-                    case 'auth/user-not-found':
-                        mensagem = '❌ Email não encontrado. Crie uma conta primeiro!';
-                        break;
-                    case 'auth/wrong-password':
-                        mensagem = '❌ Senha incorreta. Tente novamente.';
-                        break;
-                    case 'auth/invalid-email':
-                        mensagem = '❌ Email inválido.';
-                        break;
-                    case 'auth/user-disabled':
-                        mensagem = '❌ Esta conta foi desativada.';
-                        break;
-                    case 'auth/too-many-requests':
-                        mensagem = '❌ Muitas tentativas. Aguarde alguns minutos.';
-                        break;
-                    default:
-                        mensagem = `❌ ${error.message}`;
+                let msg = 'Erro ao fazer login';
+                if (error.code === 'auth/user-not-found') {
+                    msg = '❌ Email não encontrado. Crie uma conta!';
+                } else if (error.code === 'auth/wrong-password') {
+                    msg = '❌ Senha incorreta.';
+                } else if (error.code === 'auth/invalid-email') {
+                    msg = '❌ Email inválido.';
                 }
                 
-                errorDiv.textContent = mensagem;
+                errorDiv.textContent = msg;
                 errorDiv.classList.add('show');
             }
         }
 
-        async function handleCadastro(event) {
+        // ============ CADASTRO ============
+        async function fazerCadastro(event) {
             event.preventDefault();
             
             const nome = document.getElementById('cadastroNome').value.trim();
@@ -470,104 +508,278 @@
             const email = document.getElementById('cadastroEmail').value.trim();
             const password = document.getElementById('cadastroPassword').value;
             const passwordConfirm = document.getElementById('cadastroPasswordConfirm').value;
+            const pergunta = document.getElementById('cadastroPergunta').value.trim();
+            const resposta = document.getElementById('cadastroResposta').value.trim().toLowerCase();
             
             const errorDiv = document.getElementById('cadastroError');
             const loadingDiv = document.getElementById('cadastroLoading');
             const btn = document.getElementById('cadastroBtn');
 
             errorDiv.classList.remove('show');
-            loadingDiv.style.display = 'block';
-            btn.disabled = true;
 
             // Validações
             if (nome.length < 3) {
-                errorDiv.textContent = '❌ Nome deve ter no mínimo 3 caracteres';
+                errorDiv.textContent = '❌ Nome com mínimo 3 caracteres';
                 errorDiv.classList.add('show');
-                loadingDiv.style.display = 'none';
-                btn.disabled = false;
                 return;
             }
 
             if (apelido.length < 2) {
-                errorDiv.textContent = '❌ Apelido deve ter no mínimo 2 caracteres';
+                errorDiv.textContent = '❌ Apelido com mínimo 2 caracteres';
                 errorDiv.classList.add('show');
-                loadingDiv.style.display = 'none';
-                btn.disabled = false;
                 return;
             }
 
             if (password !== passwordConfirm) {
                 errorDiv.textContent = '❌ As senhas não correspondem';
                 errorDiv.classList.add('show');
-                loadingDiv.style.display = 'none';
-                btn.disabled = false;
                 return;
             }
 
             if (password.length < 6) {
-                errorDiv.textContent = '❌ Senha deve ter no mínimo 6 caracteres';
+                errorDiv.textContent = '❌ Senha com mínimo 6 caracteres';
                 errorDiv.classList.add('show');
-                loadingDiv.style.display = 'none';
-                btn.disabled = false;
                 return;
             }
 
+            if (pergunta.length < 10) {
+                errorDiv.textContent = '❌ Pergunta de segurança muito curta';
+                errorDiv.classList.add('show');
+                return;
+            }
+
+            if (resposta.length < 2) {
+                errorDiv.textContent = '❌ Resposta muito curta';
+                errorDiv.classList.add('show');
+                return;
+            }
+
+            loadingDiv.style.display = 'block';
+            btn.disabled = true;
+
             try {
-                console.log('Criando conta para:', email);
+                console.log('Criando usuário:', email);
                 
-                // Criar usuário no Firebase Auth
+                // Criar usuário
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                 const uid = userCredential.user.uid;
                 
-                console.log('Usuário criado com ID:', uid);
+                console.log('Usuário criado:', uid);
                 
-                // Salvar dados adicionais no Firestore (não criptografado por padrão)
-                // Nota: Senha NÃO é salva aqui! Firebase Authentication já criptografa
+                // Salvar dados em Firestore
                 await db.collection('usuarios').doc(uid).set({
                     uid: uid,
                     nome: nome,
                     apelido: apelido,
                     email: email,
-                    dataCriacao: new Date(),
-                    // Senha NÃO é armazenada aqui - Firebase já criptografa no Authentication
+                    dataCriacao: new Date()
+                });
+
+                // Salvar pergunta de segurança (separado)
+                await db.collection('seguranca').doc(uid).set({
+                    pergunta: pergunta,
+                    resposta: resposta
                 });
                 
-                console.log('Dados do usuário salvos no Firestore');
+                console.log('Dados salvos!');
                 loadingDiv.style.display = 'none';
                 btn.disabled = false;
                 
-                alert('✅ Conta criada com sucesso! Bem-vindo ao Passatempo!');
+                alert('✅ Conta criada com sucesso! Bem-vindo!');
                 
                 setTimeout(() => {
                     window.location.href = 'index.html';
                 }, 1000);
                 
             } catch (error) {
-                console.error('Erro de cadastro:', error.code, error.message);
+                console.error('Erro:', error.code, error.message);
                 loadingDiv.style.display = 'none';
                 btn.disabled = false;
 
-                let mensagem = 'Erro ao cadastrar';
-                switch (error.code) {
-                    case 'auth/email-already-in-use':
-                        mensagem = '❌ Este email já está cadastrado. Use outro email!';
-                        break;
-                    case 'auth/weak-password':
-                        mensagem = '❌ Senha muito fraca. Use uma senha mais forte.';
-                        break;
-                    case 'auth/invalid-email':
-                        mensagem = '❌ Email inválido.';
-                        break;
-                    case 'auth/operation-not-allowed':
-                        mensagem = '❌ Cadastro desativado. Contate o administrador.';
-                        break;
-                    default:
-                        mensagem = `❌ ${error.message}`;
+                let msg = 'Erro ao cadastrar';
+                if (error.code === 'auth/email-already-in-use') {
+                    msg = '❌ Este email já está cadastrado!';
+                } else if (error.code === 'auth/weak-password') {
+                    msg = '❌ Senha muito fraca.';
+                } else if (error.code === 'auth/invalid-email') {
+                    msg = '❌ Email inválido.';
                 }
                 
-                errorDiv.textContent = mensagem;
+                errorDiv.textContent = msg;
                 errorDiv.classList.add('show');
             }
+        }
+
+        // ============ RECUPERAÇÃO DE SENHA ============
+        async function buscarPerguntaSeguranca() {
+            const email = document.getElementById('recuperacaoEmail').value.trim();
+            const errorDiv = document.getElementById('recuperacaoError');
+            const loadingDiv = document.getElementById('recuperacaoLoading');
+
+            if (!email) {
+                errorDiv.textContent = '❌ Digite um email válido';
+                errorDiv.classList.add('show');
+                return;
+            }
+
+            errorDiv.classList.remove('show');
+            loadingDiv.style.display = 'block';
+
+            try {
+                // Buscar usuário por email
+                const users = await db.collection('usuarios').where('email', '==', email).get();
+                
+                if (users.empty) {
+                    loadingDiv.style.display = 'none';
+                    errorDiv.textContent = '❌ Email não encontrado!';
+                    errorDiv.classList.add('show');
+                    return;
+                }
+
+                const userData = users.docs[0];
+                uidRecuperacao = userData.id;
+                emailRecuperacao = email;
+
+                // Buscar pergunta de segurança
+                const segurancaDoc = await db.collection('seguranca').doc(uidRecuperacao).get();
+                
+                if (!segurancaDoc.exists) {
+                    loadingDiv.style.display = 'none';
+                    errorDiv.textContent = '❌ Pergunta de segurança não encontrada!';
+                    errorDiv.classList.add('show');
+                    return;
+                }
+
+                const pergunta = segurancaDoc.data().pergunta;
+                
+                console.log('Pergunta encontrada:', pergunta);
+                
+                // Mostrar pergunta
+                document.getElementById('perguntaLabel').textContent = pergunta;
+                document.getElementById('etapa1').classList.add('form-hidden');
+                document.getElementById('etapa1').classList.remove('form-visible');
+                document.getElementById('etapa2').classList.remove('form-hidden');
+                document.getElementById('etapa2').classList.add('form-visible');
+                loadingDiv.style.display = 'none';
+
+            } catch (error) {
+                console.error('Erro:', error);
+                loadingDiv.style.display = 'none';
+                errorDiv.textContent = '❌ Erro ao buscar pergunta. Tente novamente.';
+                errorDiv.classList.add('show');
+            }
+        }
+
+        async function verificarResposta() {
+            const resposta = document.getElementById('respostaRecuperacao').value.trim().toLowerCase();
+            const errorDiv = document.getElementById('recuperacaoError');
+            const loadingDiv = document.getElementById('recuperacaoLoading');
+
+            if (!resposta) {
+                errorDiv.textContent = '❌ Digite a resposta!';
+                errorDiv.classList.add('show');
+                return;
+            }
+
+            errorDiv.classList.remove('show');
+            loadingDiv.style.display = 'block';
+            document.getElementById('recuperacaoLoadingText').textContent = 'Verificando resposta...';
+
+            try {
+                const segurancaDoc = await db.collection('seguranca').doc(uidRecuperacao).get();
+                const respostaCorreta = segurancaDoc.data().resposta;
+
+                if (resposta === respostaCorreta) {
+                    // Resposta correta!
+                    document.getElementById('etapa2').classList.add('form-hidden');
+                    document.getElementById('etapa2').classList.remove('form-visible');
+                    document.getElementById('etapa3').classList.remove('form-hidden');
+                    document.getElementById('etapa3').classList.add('form-visible');
+                    loadingDiv.style.display = 'none';
+                } else {
+                    loadingDiv.style.display = 'none';
+                    errorDiv.textContent = '❌ Resposta incorreta!';
+                    errorDiv.classList.add('show');
+                }
+
+            } catch (error) {
+                console.error('Erro:', error);
+                loadingDiv.style.display = 'none';
+                errorDiv.textContent = '❌ Erro ao verificar resposta.';
+                errorDiv.classList.add('show');
+            }
+        }
+
+        async function alterarSenha() {
+            const novaSenha = document.getElementById('novasenha').value;
+            const novasenhaConfirm = document.getElementById('novasenhaConfirm').value;
+            const errorDiv = document.getElementById('recuperacaoError');
+            const loadingDiv = document.getElementById('recuperacaoLoading');
+
+            if (novaSenha !== novasenhaConfirm) {
+                errorDiv.textContent = '❌ As senhas não correspondem!';
+                errorDiv.classList.add('show');
+                return;
+            }
+
+            if (novaSenha.length < 6) {
+                errorDiv.textContent = '❌ Senha com mínimo 6 caracteres!';
+                errorDiv.classList.add('show');
+                return;
+            }
+
+            errorDiv.classList.remove('show');
+            loadingDiv.style.display = 'block';
+            document.getElementById('recuperacaoLoadingText').textContent = 'Alterando senha...';
+
+            try {
+                // Enviar link de reset de senha
+                await auth.sendPasswordResetEmail(emailRecuperacao);
+                
+                loadingDiv.style.display = 'none';
+                alert('✅ Link de redefinição de senha enviado para seu email!\n\nVerifique sua caixa de entrada (ou spam).');
+                
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+
+            } catch (error) {
+                console.error('Erro:', error);
+                loadingDiv.style.display = 'none';
+                errorDiv.textContent = '❌ Erro ao enviar link de redefinição.';
+                errorDiv.classList.add('show');
+            }
+        }
+
+        // ============ NAVEGAÇÃO ============
+        function irParaCadastro() {
+            document.getElementById('loginForm').classList.add('form-hidden');
+            document.getElementById('cadastroForm').classList.remove('form-hidden');
+            document.getElementById('recuperacaoForm').classList.add('form-hidden');
+        }
+
+        function irParaLogin() {
+            document.getElementById('loginForm').classList.remove('form-hidden');
+            document.getElementById('cadastroForm').classList.add('form-hidden');
+            document.getElementById('recuperacaoForm').classList.add('form-hidden');
+            limparRecuperacao();
+        }
+
+        function irParaRecuperacao() {
+            document.getElementById('loginForm').classList.add('form-hidden');
+            document.getElementById('cadastroForm').classList.add('form-hidden');
+            document.getElementById('recuperacaoForm').classList.remove('form-hidden');
+        }
+
+        function limparRecuperacao() {
+            document.getElementById('recuperacaoEmail').value = '';
+            document.getElementById('respostaRecuperacao').value = '';
+            document.getElementById('novasenha').value = '';
+            document.getElementById('novasenhaConfirm').value = '';
+            document.getElementById('etapa1').classList.remove('form-hidden');
+            document.getElementById('etapa2').classList.add('form-hidden');
+            document.getElementById('etapa3').classList.add('form-hidden');
+            document.getElementById('recuperacaoError').classList.remove('show');
         }
     </script>
 </body>
