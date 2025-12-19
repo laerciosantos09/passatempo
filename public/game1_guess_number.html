@@ -15,665 +15,393 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 20px;
         }
 
         .container {
-            max-width: 600px;
-            margin: 0 auto;
             background: white;
+            padding: 40px;
             border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #667eea;
-            padding-bottom: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 100%;
         }
 
         .back-btn {
+            display: block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
             background: #667eea;
             color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: bold;
+            text-decoration: none;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
             transition: opacity 0.3s;
         }
 
         .back-btn:hover {
-            opacity: 0.8;
+            opacity: 0.9;
         }
 
         h1 {
+            text-align: center;
+            margin-bottom: 30px;
             color: #333;
+        }
+
+        .info {
             text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .level-selector {
-            margin-bottom: 30px;
-            padding: 20px;
-            background: #f5f5f5;
-            border-radius: 10px;
-        }
-
-        .level-info {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            font-size: 14px;
+            margin-bottom: 20px;
             color: #666;
         }
 
-        .difficulty-levels {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .difficulty-btn {
-            padding: 10px;
-            border: 2px solid #ddd;
-            background: white;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: bold;
-        }
-
-        .difficulty-btn.active {
-            background: #667eea;
-            color: white;
-            border-color: #667eea;
-        }
-
-        .difficulty-btn:hover {
-            border-color: #667eea;
-        }
-
-        .start-btn {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-
-        .start-btn:hover {
-            transform: scale(1.02);
-        }
-
-        .game-area {
-            display: none;
-        }
-
-        .game-area.active {
-            display: block;
-        }
-
-        .game-info {
-            background: #f5f5f5;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .game-info p {
-            color: #666;
-            margin: 5px 0;
-        }
-
-        .game-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .stat-box {
-            background: #f0f0f0;
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: #999;
-            margin-bottom: 5px;
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #667eea;
+        .game-section {
+            margin: 20px 0;
         }
 
         .input-group {
+            display: flex;
+            gap: 10px;
             margin-bottom: 20px;
         }
 
-        .input-group input {
-            width: 100%;
+        input[type="number"] {
+            flex: 1;
             padding: 12px;
             border: 2px solid #ddd;
             border-radius: 8px;
             font-size: 16px;
-            transition: border-color 0.3s;
         }
 
-        .input-group input:focus {
+        input[type="number"]:focus {
             outline: none;
             border-color: #667eea;
         }
 
-        .button-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .btn {
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-submit {
+        button {
+            padding: 12px 30px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            grid-column: 1 / -1;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.3s;
         }
 
-        .btn-submit:hover {
-            transform: translateY(-2px);
+        button:hover {
+            opacity: 0.9;
         }
 
-        .btn-hint {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .btn-hint:hover {
-            background: #ffe69c;
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .message {
+            text-align: center;
             padding: 15px;
             border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-weight: bold;
-            display: none;
-        }
-
-        .message.show {
-            display: block;
-        }
-
-        .message.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .message.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+            margin: 20px 0;
+            font-weight: 600;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .message.info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
+            background: #e3f2fd;
+            color: #1976d2;
+            border: 2px solid #1976d2;
         }
 
-        .feedback {
-            margin-bottom: 20px;
-            padding: 10px;
-            background: #f9f9f9;
-            border-left: 4px solid #667eea;
-            border-radius: 4px;
+        .message.success {
+            background: #e8f5e9;
+            color: #388e3c;
+            border: 2px solid #388e3c;
         }
 
-        .feedback p {
-            color: #666;
-            font-size: 14px;
+        .message.error {
+            background: #ffebee;
+            color: #c62828;
+            border: 2px solid #c62828;
         }
 
-        .next-level-btn {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-
-        .next-level-btn:hover {
-            transform: scale(1.02);
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 10px;
-            background: #ddd;
-            border-radius: 5px;
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            width: 0%;
-            transition: width 0.3s;
-        }
-
-        .level-select-modal {
-            display: none;
-        }
-
-        .level-select-modal.active {
-            display: block;
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            max-width: 500px;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .level-grid {
+        .stats {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            margin-top: 20px;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
         }
 
-        .level-btn {
-            aspect-ratio: 1;
-            border: 2px solid #ddd;
-            background: white;
+        .stat-box {
+            background: #f5f5f5;
+            padding: 15px;
             border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .stat-box h3 {
+            color: #667eea;
+            font-size: 24px;
+            margin: 5px 0;
+        }
+
+        .stat-box p {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .game-over {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background: #e8f5e9;
+            border-radius: 8px;
+            border: 2px solid #388e3c;
+        }
+
+        .game-over h2 {
+            color: #388e3c;
+            margin-bottom: 10px;
+        }
+
+        .game-over p {
+            color: #666;
+            margin: 10px 0;
+        }
+
+        .button-group {
             display: flex;
-            align-items: center;
-            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
         }
 
-        .level-btn:hover {
-            border-color: #667eea;
+        .button-group button {
+            flex: 1;
         }
 
-        .level-btn.completed {
-            background: #d4edda;
-            border-color: #28a745;
-            color: #28a745;
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
         }
 
-        .level-btn.current {
-            background: #667eea;
-            color: white;
-            border-color: #667eea;
+        .spinner {
+            border: 3px solid #ddd;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            .input-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <button class="back-btn" onclick="goBack()">← Voltar</button>
-            <h2>🎯 Adivinha o Número</h2>
-            <div style="width: 100px;"></div>
+        <a href="index.html" class="back-btn">← Voltar</a>
+
+        <h1>🎯 Adivinha o Número</h1>
+        <div class="info">
+            <p>Tente adivinhar o número secreto entre 1 e 100!</p>
         </div>
 
-        <!-- Seletor de Nível -->
-        <div class="level-selector" id="levelSelector">
-            <div class="level-info">
-                <span>Escolha o nível de dificuldade:</span>
-                <span id="completedCount">0/200 completos</span>
-            </div>
-
-            <div class="difficulty-levels">
-                <button class="difficulty-btn active" onclick="setDifficulty('easy')">Fácil (1-50)</button>
-                <button class="difficulty-btn" onclick="setDifficulty('medium')">Médio (1-100)</button>
-                <button class="difficulty-btn" onclick="setDifficulty('hard')">Difícil (1-500)</button>
-            </div>
-
-            <button class="start-btn" onclick="startGame()">Começar Novo Jogo</button>
-            <button class="start-btn" style="margin-top: 10px; background: #666;" onclick="selectLevel()">Selecionar Nível Específico</button>
-        </div>
-
-        <!-- Área do Jogo -->
-        <div class="game-area" id="gameArea">
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-
-            <div class="game-info">
-                <p><strong>Nível <span id="currentLevel">1</span>/200</strong></p>
-                <p id="rangeText">Adivinhe um número entre 1 e 50</p>
-            </div>
-
-            <div class="game-stats">
+        <div class="game-section">
+            <div class="stats">
                 <div class="stat-box">
-                    <div class="stat-label">Tentativas</div>
-                    <div class="stat-value" id="attempts">0</div>
+                    <h3 id="tentativas">0</h3>
+                    <p>Tentativas</p>
                 </div>
                 <div class="stat-box">
-                    <div class="stat-label">Melhor</div>
-                    <div class="stat-value" id="bestAttempts">-</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-label">Dificuldade</div>
-                    <div class="stat-value" id="difficultyDisplay">Fácil</div>
+                    <h3 id="pontos">100</h3>
+                    <p>Pontos</p>
                 </div>
             </div>
 
-            <div id="message" class="message"></div>
+            <div id="messagemContainer"></div>
 
             <div class="input-group">
-                <input type="number" id="guessInput" placeholder="Digite seu palpite..." onkeypress="handleKeyPress(event)">
+                <input 
+                    type="number" 
+                    id="numeroInput" 
+                    min="1" 
+                    max="100" 
+                    placeholder="Digite um número"
+                    autocomplete="off"
+                >
+                <button onclick="chutar()">Chutar</button>
             </div>
 
-            <div class="button-group">
-                <button class="btn btn-hint" onclick="getHint()">💡 Dica</button>
-                <button class="btn btn-submit" onclick="submitGuess()">Enviar</button>
+            <div id="gameOverDiv" class="game-over">
+                <h2>🎉 Parabéns! Você acertou!</h2>
+                <p id="resultado"></p>
+                <div class="button-group">
+                    <button onclick="novoJogo()">Jogar Novamente</button>
+                    <button onclick="salvarPontuacao()">Salvar e Voltar</button>
+                </div>
             </div>
 
-            <div id="feedback" class="feedback" style="display: none;">
-                <p id="feedbackText"></p>
+            <div id="loadingDiv" class="loading">
+                <div class="spinner"></div>
+                <p>Salvando sua pontuação...</p>
             </div>
-
-            <button class="next-level-btn" id="nextBtn" style="display: none;" onclick="nextLevel()">Próximo Nível →</button>
         </div>
     </div>
 
-    <!-- Modal de Seleção de Nível -->
-    <div class="level-select-modal" id="levelModal">
-        <div class="modal-overlay" onclick="closeLevelModal()">
-            <div class="modal-content" onclick="event.stopPropagation()">
-                <h3>Escolha um Nível (1-200)</h3>
-                <div class="level-grid" id="levelGrid"></div>
-                <button class="start-btn" style="margin-top: 20px;" onclick="closeLevelModal()">Fechar</button>
-            </div>
-        </div>
-    </div>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script>
 
     <script>
-        // Configurações do Jogo
-        const gameConfig = {
-            totalLevels: 200,
-            currentLevel: 1,
-            difficulty: 'easy',
-            secretNumber: 0,
-            attempts: 0,
-            bestAttempts: localStorage.getItem('numberGamBestAttempts') ? JSON.parse(localStorage.getItem('numberGamBestAttempts')) : {},
-            usedHints: 0,
-            hintsAvailable: 3,
-            completed: JSON.parse(localStorage.getItem('numberGameCompleted') || '[]')
-        };
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
-        const difficultyConfig = {
-            easy: { min: 1, max: 50, levelRange: 50 },
-            medium: { min: 1, max: 100, levelRange: 100 },
-            hard: { min: 1, max: 500, levelRange: 500 }
-        };
+        let numeroSecreto;
+        let tentativas = 0;
+        let pontos = 100;
+        let jogoTerminado = false;
 
-        function setDifficulty(level) {
-            document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            gameConfig.difficulty = level;
-        }
-
-        function startGame() {
-            gameConfig.currentLevel = 1;
-            gameConfig.attempts = 0;
-            gameConfig.usedHints = 0;
-            gameConfig.hintsAvailable = 3;
-            generateSecretNumber();
-            showGameArea();
-            updateUI();
-        }
-
-        function generateSecretNumber() {
-            const config = difficultyConfig[gameConfig.difficulty];
-            gameConfig.secretNumber = Math.floor(Math.random() * (config.max - config.min + 1)) + config.min;
-        }
-
-        function showGameArea() {
-            document.getElementById('levelSelector').classList.remove('active');
-            document.getElementById('gameArea').classList.add('active');
-        }
-
-        function submitGuess() {
-            const guess = parseInt(document.getElementById('guessInput').value);
-            const messageEl = document.getElementById('message');
-
-            if (isNaN(guess)) {
-                showMessage('Por favor, digite um número válido', 'error');
-                return;
-            }
-
-            const config = difficultyConfig[gameConfig.difficulty];
-            if (guess < config.min || guess > config.max) {
-                showMessage(`Digite um número entre ${config.min} e ${config.max}`, 'error');
-                return;
-            }
-
-            gameConfig.attempts++;
-            updateAttempts();
-
-            if (guess === gameConfig.secretNumber) {
-                won();
-            } else if (guess < gameConfig.secretNumber) {
-                showMessage(`Muito baixo! Tente novamente.`, 'info');
-                showFeedback(`O número é maior que ${guess}`);
-            } else {
-                showMessage(`Muito alto! Tente novamente.`, 'info');
-                showFeedback(`O número é menor que ${guess}`);
-            }
-
-            document.getElementById('guessInput').value = '';
-            document.getElementById('guessInput').focus();
-        }
-
-        function won() {
-            const config = difficultyConfig[gameConfig.difficulty];
-            const key = `${gameConfig.currentLevel}-${gameConfig.difficulty}`;
+        function iniciarJogo() {
+            numeroSecreto = Math.floor(Math.random() * 100) + 1;
+            tentativas = 0;
+            pontos = 100;
+            jogoTerminado = false;
             
-            if (!gameConfig.bestAttempts[key] || gameConfig.attempts < gameConfig.bestAttempts[key]) {
-                gameConfig.bestAttempts[key] = gameConfig.attempts;
-                localStorage.setItem('numberGamBestAttempts', JSON.stringify(gameConfig.bestAttempts));
-            }
-
-            if (!gameConfig.completed.includes(gameConfig.currentLevel)) {
-                gameConfig.completed.push(gameConfig.currentLevel);
-                localStorage.setItem('numberGameCompleted', JSON.stringify(gameConfig.completed));
-            }
-
-            showMessage(`🎉 Parabéns! Você acertou em ${gameConfig.attempts} tentativa(s)!`, 'success');
-            document.getElementById('guessInput').disabled = true;
-            document.getElementById('nextBtn').style.display = 'block';
-            updateUI();
+            document.getElementById('tentativas').textContent = tentativas;
+            document.getElementById('pontos').textContent = pontos;
+            document.getElementById('numeroInput').value = '';
+            document.getElementById('numeroInput').disabled = false;
+            document.getElementById('messagemContainer').innerHTML = '';
+            document.getElementById('gameOverDiv').style.display = 'none';
+            document.getElementById('numeroInput').focus();
         }
 
-        function getHint() {
-            if (gameConfig.usedHints >= gameConfig.hintsAvailable) {
-                showMessage('Você já usou todas as dicas disponíveis', 'error');
+        function chutar() {
+            if (jogoTerminado) return;
+
+            const numero = parseInt(document.getElementById('numeroInput').value);
+
+            if (!numero || numero < 1 || numero > 100) {
+                mostrarMensagem('Digite um número válido entre 1 e 100', 'error');
                 return;
             }
 
-            gameConfig.usedHints++;
-            const num = gameConfig.secretNumber;
-            const hints = [
-                `O número é ${num % 2 === 0 ? 'par' : 'ímpar'}`,
-                `O número contém o dígito ${num.toString()[0]}`,
-                `O número é ${num < 25 ? 'menor' : 'maior'} que 25`
-            ];
+            tentativas++;
+            document.getElementById('tentativas').textContent = tentativas;
 
-            showMessage(`💡 Dica ${gameConfig.usedHints}: ${hints[gameConfig.usedHints - 1]}`, 'info');
-        }
+            let mensagem = '';
+            let tipo = 'info';
 
-        function nextLevel() {
-            if (gameConfig.currentLevel < gameConfig.totalLevels) {
-                gameConfig.currentLevel++;
-                gameConfig.attempts = 0;
-                gameConfig.usedHints = 0;
-                generateSecretNumber();
-                document.getElementById('guessInput').disabled = false;
-                document.getElementById('guessInput').value = '';
-                document.getElementById('nextBtn').style.display = 'none';
-                clearFeedback();
-                clearMessage();
-                updateUI();
-                document.getElementById('guessInput').focus();
-            } else {
-                showMessage('🏆 Você completou todos os 200 níveis!', 'success');
-                document.getElementById('nextBtn').textContent = 'Voltar ao Menu';
-                document.getElementById('nextBtn').onclick = () => backToMenu();
-            }
-        }
-
-        function backToMenu() {
-            document.getElementById('levelSelector').classList.add('active');
-            document.getElementById('gameArea').classList.remove('active');
-            gameConfig.currentLevel = 1;
-        }
-
-        function selectLevel() {
-            generateLevelGrid();
-            document.getElementById('levelModal').classList.add('active');
-        }
-
-        function generateLevelGrid() {
-            const grid = document.getElementById('levelGrid');
-            grid.innerHTML = '';
-            
-            for (let i = 1; i <= gameConfig.totalLevels; i++) {
-                const btn = document.createElement('button');
-                btn.className = 'level-btn';
-                btn.textContent = i;
+            if (numero === numeroSecreto) {
+                jogoTerminado = true;
+                pontos = Math.max(0, 100 - (tentativas - 1) * 5);
+                document.getElementById('pontos').textContent = pontos;
                 
-                if (gameConfig.completed.includes(i)) {
-                    btn.classList.add('completed');
-                }
-                if (i === gameConfig.currentLevel) {
-                    btn.classList.add('current');
-                }
+                document.getElementById('resultado').textContent = 
+                    `Você acertou em ${tentativas} tentativa${tentativas > 1 ? 's' : ''}!\nPontos: ${pontos}`;
                 
-                btn.onclick = () => selectSpecificLevel(i);
-                grid.appendChild(btn);
+                document.getElementById('gameOverDiv').style.display = 'block';
+                document.getElementById('numeroInput').disabled = true;
+                return;
+            } else if (numero < numeroSecreto) {
+                mensagem = `É maior que ${numero}! Tente novamente.`;
+                tipo = 'info';
+            } else {
+                mensagem = `É menor que ${numero}! Tente novamente.`;
+                tipo = 'info';
+            }
+
+            // Reduzir pontos a cada tentativa
+            pontos = Math.max(0, 100 - (tentativas * 5));
+            document.getElementById('pontos').textContent = pontos;
+
+            mostrarMensagem(mensagem, tipo);
+            document.getElementById('numeroInput').value = '';
+            document.getElementById('numeroInput').focus();
+        }
+
+        function mostrarMensagem(texto, tipo) {
+            const container = document.getElementById('messagemContainer');
+            container.innerHTML = `<div class="message ${tipo}">${texto}</div>`;
+        }
+
+        async function salvarPontuacao() {
+            const user = auth.currentUser;
+
+            if (!user) {
+                alert('Você precisa estar logado para salvar a pontuação!');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            document.getElementById('loadingDiv').style.display = 'block';
+
+            try {
+                // Obter nome do usuário
+                const userDoc = await db.collection('usuarios').doc(user.uid).get();
+                const nomeUsuario = userDoc.data().nome;
+
+                // Salvar pontuação
+                await db.collection('pontuacoes').add({
+                    uid: user.uid,
+                    nomeUsuario: nomeUsuario,
+                    nomeJogo: 'Adivinha o Número',
+                    pontos: pontos,
+                    tentativas: tentativas,
+                    data: new Date(),
+                    mes: new Date().getMonth() + 1,
+                    ano: new Date().getFullYear()
+                });
+
+                document.getElementById('loadingDiv').style.display = 'none';
+                alert('Pontuação salva com sucesso! ✨');
+                window.location.href = 'index.html';
+            } catch (error) {
+                document.getElementById('loadingDiv').style.display = 'none';
+                console.error('Erro ao salvar:', error);
+                alert('Erro ao salvar a pontuação. Tente novamente.');
             }
         }
 
-        function selectSpecificLevel(level) {
-            gameConfig.currentLevel = level;
-            gameConfig.attempts = 0;
-            gameConfig.usedHints = 0;
-            generateSecretNumber();
-            closeLevelModal();
-            showGameArea();
-            updateUI();
+        function novoJogo() {
+            iniciarJogo();
         }
 
-        function closeLevelModal() {
-            document.getElementById('levelModal').classList.remove('active');
-        }
-
-        function updateAttempts() {
-            document.getElementById('attempts').textContent = gameConfig.attempts;
-        }
-
-        function updateUI() {
-            document.getElementById('currentLevel').textContent = gameConfig.currentLevel;
-            document.getElementById('completedCount').textContent = `${gameConfig.completed.length}/200 completos`;
-            document.getElementById('progressFill').style.width = `${(gameConfig.currentLevel / gameConfig.totalLevels) * 100}%`;
-            
-            const config = difficultyConfig[gameConfig.difficulty];
-            document.getElementById('rangeText').textContent = `Adivinhe um número entre ${config.min} e ${config.max}`;
-            document.getElementById('difficultyDisplay').textContent = 
-                gameConfig.difficulty === 'easy' ? 'Fácil' : gameConfig.difficulty === 'medium' ? 'Médio' : 'Difícil';
-            
-            const key = `${gameConfig.currentLevel}-${gameConfig.difficulty}`;
-            document.getElementById('bestAttempts').textContent = gameConfig.bestAttempts[key] || '-';
-            
-            updateAttempts();
-        }
-
-        function showMessage(text, type) {
-            const messageEl = document.getElementById('message');
-            messageEl.textContent = text;
-            messageEl.className = `message show ${type}`;
-            setTimeout(() => messageEl.classList.remove('show'), 5000);
-        }
-
-        function showFeedback(text) {
-            const feedback = document.getElementById('feedback');
-            document.getElementById('feedbackText').textContent = text;
-            feedback.style.display = 'block';
-        }
-
-        function clearFeedback() {
-            document.getElementById('feedback').style.display = 'none';
-        }
-
-        function clearMessage() {
-            document.getElementById('message').classList.remove('show');
-        }
-
-        function handleKeyPress(event) {
-            if (event.key === 'Enter') {
-                submitGuess();
+        // Permitir chutar com Enter
+        document.getElementById('numeroInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                chutar();
             }
-        }
+        });
 
-        function goBack() {
-            window.location.href = 'index.html';
-        }
-
-        // Inicializar
-        updateUI();
+        // Iniciar jogo ao carregar
+        iniciarJogo();
     </script>
 </body>
 </html>

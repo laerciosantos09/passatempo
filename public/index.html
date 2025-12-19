@@ -46,8 +46,13 @@
             background-clip: text;
         }
 
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
         nav a {
-            margin-left: 30px;
             text-decoration: none;
             color: #333;
             font-weight: 500;
@@ -56,6 +61,62 @@
 
         nav a:hover {
             color: #667eea;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-login {
+            padding: 8px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.3s;
+        }
+
+        .btn-login:hover {
+            opacity: 0.9;
+        }
+
+        .btn-logout {
+            padding: 8px 20px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.3s;
+        }
+
+        .btn-logout:hover {
+            opacity: 0.9;
+        }
+
+        .btn-ranking {
+            padding: 8px 20px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.3s;
+        }
+
+        .btn-ranking:hover {
+            opacity: 0.9;
+        }
+
+        .user-info {
+            color: #333;
+            font-weight: 500;
         }
 
         /* Hero Section */
@@ -282,9 +343,30 @@
                 font-size: 16px;
             }
 
+            .header-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            nav {
+                flex-direction: column;
+                width: 100%;
+                gap: 10px;
+            }
+
             nav a {
-                margin-left: 15px;
-                font-size: 14px;
+                width: 100%;
+                text-align: center;
+            }
+
+            .auth-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn-login, .btn-logout, .btn-ranking {
+                width: 100%;
+                text-align: center;
             }
 
             .games-grid {
@@ -293,6 +375,11 @@
 
             .section-title {
                 font-size: 28px;
+            }
+
+            .user-info {
+                width: 100%;
+                text-align: center;
             }
         }
     </style>
@@ -306,6 +393,12 @@
                 <a href="#jogos">Jogos</a>
                 <a href="#features">Sobre</a>
                 <a href="#contato">Contato</a>
+                <div class="auth-buttons">
+                    <span class="user-info" id="userInfo" style="display: none;"></span>
+                    <a href="ranking.html" class="btn-ranking" id="rankingBtn" style="display: none;">🏆 Ranking</a>
+                    <button class="btn-logout" id="logoutBtn" style="display: none;">Sair</button>
+                    <a href="login.html" class="btn-login" id="loginBtn">Login / Cadastro</a>
+                </div>
             </nav>
         </div>
     </header>
@@ -377,7 +470,7 @@
                 <div class="game-content">
                     <div class="game-title">Ranking Global</div>
                     <p class="game-description">Compete com jogadores do mundo todo. Alcance o topo do ranking!</p>
-                    <a href="game6_ranking.html" class="game-button">Ver Ranking</a>
+                    <a href="ranking.html" class="game-button">Ver Ranking</a>
                 </div>
             </div>
         </div>
@@ -437,5 +530,46 @@
             <p style="margin-top: 20px; opacity: 0.7; font-size: 12px;">© 2024 Passatempo. Todos os direitos reservados.</p>
         </div>
     </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js"></script>
+    <script src="firebase-config.js"></script>
+
+    <script>
+        const auth = firebase.auth();
+
+        // Verificar se usuário está logado
+        auth.onAuthStateChanged((user) => {
+            const loginBtn = document.getElementById('loginBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const rankingBtn = document.getElementById('rankingBtn');
+            const userInfo = document.getElementById('userInfo');
+
+            if (user) {
+                // Usuário está logado
+                loginBtn.style.display = 'none';
+                logoutBtn.style.display = 'block';
+                rankingBtn.style.display = 'block';
+                userInfo.style.display = 'block';
+                userInfo.textContent = `Olá, ${user.displayName || user.email.split('@')[0]}!`;
+            } else {
+                // Usuário não está logado
+                loginBtn.style.display = 'block';
+                logoutBtn.style.display = 'none';
+                rankingBtn.style.display = 'none';
+                userInfo.style.display = 'none';
+            }
+        });
+
+        function logout() {
+            if (confirm('Tem certeza que deseja sair?')) {
+                auth.signOut().then(() => {
+                    window.location.reload();
+                });
+            }
+        }
+
+        document.getElementById('logoutBtn').addEventListener('click', logout);
+    </script>
 </body>
 </html>

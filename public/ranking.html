@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking - Passatempo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.3s;
+        }
+
+        .logout-btn:hover {
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+            font-size: 32px;
+        }
+
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .ranking-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .ranking-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .ranking-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .ranking-table tbody tr:nth-child(odd) {
+            background: #fafafa;
+        }
+
+        .medal {
+            font-size: 24px;
+            margin-right: 8px;
+        }
+
+        .position-number {
+            font-weight: 600;
+            color: #667eea;
+            min-width: 30px;
+        }
+
+        .back-btn {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            text-decoration: none;
+            display: inline-block;
+            transition: opacity 0.3s;
+            font-weight: 600;
+        }
+
+        .back-btn:hover {
+            opacity: 0.9;
+        }
+
+        .filter {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .filter label {
+            margin-right: 10px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .filter select {
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            margin: 0 5px;
+            cursor: pointer;
+            font-size: 14px;
+            background: white;
+        }
+
+        .filter select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+            font-size: 16px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .spinner {
+            border: 4px solid #ddd;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .ranking-table th,
+            .ranking-table td {
+                padding: 8px;
+                font-size: 13px;
+            }
+
+            .medal {
+                font-size: 18px;
+            }
+
+            .filter {
+                flex-direction: column;
+            }
+
+            .filter select {
+                width: 100%;
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">🎮 Passatempo</div>
+        <button class="logout-btn" onclick="logout()">Sair</button>
+    </header>
+
+    <div class="container">
+        <a href="index.html" class="back-btn">← Voltar para Jogos</a>
+
+        <h1>🏆 Ranking Mensal</h1>
+
+        <div class="filter">
+            <label for="filtroJogo">Filtrar por jogo:</label>
+            <select id="filtroJogo" onchange="carregarRanking()">
+                <option value="">Todos os jogos</option>
+                <option value="Adivinha o Número">Adivinha o Número</option>
+                <option value="Quiz de Geral">Quiz de Geral</option>
+                <option value="Jogo da Memória">Jogo da Memória</option>
+                <option value="Reação Rápida">Reação Rápida</option>
+                <option value="Palavras Cruzadas">Palavras Cruzadas</option>
+                <option value="Ranking Global">Ranking Global</option>
+            </select>
+        </div>
+
+        <div id="ranking"></div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script>
+
+    <script>
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Verificar login
+        auth.onAuthStateChanged((user) => {
+            if (!user) {
+                window.location.href = "login.html";
+            } else {
+                carregarRanking();
+            }
+        });
+
+        async function carregarRanking() {
+            const mesAtual = new Date().getMonth() + 1;
+            const anoAtual = new Date().getFullYear();
+            const filtroJogo = document.getElementById('filtroJogo').value;
+            const rankingDiv = document.getElementById('ranking');
+
+            rankingDiv.innerHTML = '<div class="loading"><div class="spinner"></div><p>Carregando ranking...</p></div>';
+
+            try {
+                let query = db.collection('pontuacoes')
+                    .where('mes', '==', mesAtual)
+                    .where('ano', '==', anoAtual);
+
+                if (filtroJogo) {
+                    query = query.where('nomeJogo', '==', filtroJogo);
+                }
+
+                query = query.orderBy('pontos', 'desc').limit(100);
+
+                const snapshot = await query.get();
+
+                let html = '<table class="ranking-table">';
+                html += '<thead><tr><th style="width: 80px;">Posição</th><th>Jogador</th><th>Jogo</th><th style="width: 100px;">Pontos</th></tr></thead><tbody>';
+
+                let posicao = 1;
+                const medals = ['🥇', '🥈', '🥉'];
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const medal = posicao <= 3 ? medals[posicao - 1] : '';
+
+                    html += `<tr>
+                        <td>
+                            ${medal ? `<span class="medal">${medal}</span>` : ''}
+                            <span class="position-number">${posicao}º</span>
+                        </td>
+                        <td>${data.nomeUsuario || 'Anônimo'}</td>
+                        <td>${data.nomeJogo || 'Desconhecido'}</td>
+                        <td><strong>${data.pontos || 0}</strong></td>
+                    </tr>`;
+                    posicao++;
+                });
+
+                if (posicao === 1) {
+                    html = '<div class="empty-message">Nenhuma pontuação registrada ainda para este mês. <br>Jogue agora e apareça no ranking! 🎮</div>';
+                } else {
+                    html += '</tbody></table>';
+                }
+
+                rankingDiv.innerHTML = html;
+            } catch (error) {
+                console.error('Erro ao carregar ranking:', error);
+                rankingDiv.innerHTML = '<div class="empty-message">Erro ao carregar o ranking. Tente novamente mais tarde.</div>';
+            }
+        }
+
+        function logout() {
+            if (confirm('Tem certeza que deseja sair?')) {
+                auth.signOut().then(() => {
+                    window.location.href = "login.html";
+                });
+            }
+        }
+    </script>
+</body>
+</html>
